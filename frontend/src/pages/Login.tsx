@@ -7,7 +7,7 @@ const Login:React.FC = () => {
   return (
     <section className='flex w-full' style={{height: "calc(100vh - 64px)"}}>
       <div className='w-full flex flex-col justify-center'>
-        <div className='px-40'>
+        <div className='px-40 flex flex-col gap-10'>
             <div className='flex flex-col items-center justify-center gap-5'>
                 <CalendarIcon className='w-10 h-10'/>
 
@@ -18,20 +18,20 @@ const Login:React.FC = () => {
                 </div>
             </div>
 
-            <div className='flex flex-col gap-5'>
+            <form className='flex flex-col gap-5'>
                 <div className='flex flex-col'>
                     <label htmlFor="email" className='text-sm font-medium'>Email Address</label>
                     <div className='flex relative'>
-                        <input type="email" name="email" id="email" placeholder='your@email.com' className='w-full border border-slate-300 rounded-md px-10 py-2'/>
-                        <EnvelopeIcon className='w-5 h-5 absolute text-slate-500 top-3 left-3'/>
+                        <input type="email" name="email" id="email" placeholder='your@email.com' className='w-full border border-slate-300 rounded-md px-10 py-2' required/>
+                        <EnvelopeIcon className='w-5 h-5 absolute text-slate-500 top-3 left-3 pointer-events-none'/>
                     </div>
                 </div>
 
                 <div className='flex flex-col'>
                     <label htmlFor="password" className='text-sm font-medium'>Password</label>
                     <div className='flex relative'>
-                        <input type="password" name="password" id="password" placeholder='•••••••••••' className='w-full border border-slate-300 rounded-md px-10 py-2'/>
-                        <LockClosedIcon className='w-5 h-5 absolute text-slate-500 top-3 left-3'/>
+                        <input type="password" name="password" id="password" placeholder='•••••••••••' className='w-full border border-slate-300 rounded-md px-10 py-2' required/>
+                        <LockClosedIcon className='w-5 h-5 absolute text-slate-500 top-3 left-3 pointer-events-none'/>
                     </div>
 
                     <div className='flex justify-end pt-1'>
@@ -40,7 +40,7 @@ const Login:React.FC = () => {
                 </div>
 
                 <div className='flex flex-col gap-2'>
-                    <button className='bg-blue-500 h-fit py-2 text-white rounded-md font-medium hover:bg-blue-600 hover:transition duration-300 cursor-pointer'>Sign In</button>
+                    <button type='submit' className='bg-blue-500 h-fit py-2 text-white rounded-md font-medium hover:bg-blue-600 hover:transition duration-300 cursor-pointer'>Sign In</button>
                     
                     <div className='flex text-sm gap-1 justify-center'>
                         <span>Don't have an account?</span>
@@ -48,7 +48,7 @@ const Login:React.FC = () => {
                     </div>
                 </div>
 
-            </div>
+            </form>
 
         </div>
       </div>
