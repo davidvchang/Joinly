@@ -13,8 +13,8 @@ type PropsBlogCard = {
 
 const BlogCard:React.FC<PropsBlogCard> = ({title, category, date, time, address, attend_number}) => {
   return (
-    <div className='flex flex-col w-auto rounded-xl overflow-hidden border border-slate-300 hover:-translate-y-1 hover:shadow-md hover:transition duration-300'>
-        <div className='w-full h-44 bg-blue-300 relative'>
+    <div className='flex flex-col w-auto rounded-xl overflow-hidden border border-slate-300 hover:-translate-y-2 hover:shadow-lg hover:transition duration-300'>
+        <div className='w-full h-48 bg-blue-300 relative'>
 
             <span className='text-xs bg-blue-500 text-white font-medium w-fit h-fit px-2 py-0.5 rounded-full absolute top-3 right-3 select-none'>{category}</span>
             

@@ -2,6 +2,7 @@ import React from "react";
 import SeachInput from "../components/SeachInput";
 import Category from "../components/Category";
 import BlogCard from "../components/BlogCard";
+import Navegation from "../components/Navegation";
 
 const Home: React.FC = () => {
   return (
@@ -30,48 +31,25 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
-          <BlogCard
-            title="Tech Conference 2025"
-            category="Technology"
-            date="Saturday, June 14, 2025"
-            time="09:00 am"
-            address="San Francisco, Convention"
-            attend_number={10}
-          />
-          <BlogCard
-            title="Tech Conference 2025"
-            category="Technology"
-            date="Saturday, June 14, 2025"
-            time="09:00 am"
-            address="San Francisco, Convention"
-            attend_number={10}
-          />
-          <BlogCard
-            title="Tech Conference 2025"
-            category="Technology"
-            date="Saturday, June 14, 2025"
-            time="09:00 am"
-            address="San Francisco, Convention"
-            attend_number={10}
-          />
-          <BlogCard
-            title="Tech Conference 2025"
-            category="Technology"
-            date="Saturday, June 14, 2025"
-            time="09:00 am"
-            address="San Francisco, Convention"
-            attend_number={10}
-          />
-          <BlogCard
-            title="Tech Conference 2025"
-            category="Technology"
-            date="Saturday, June 14, 2025"
-            time="09:00 am"
-            address="San Francisco, Convention"
-            attend_number={10}
-          />
+        <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-5">
+          <BlogCard title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} />
+          <BlogCard title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} />
+          <BlogCard title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} />
+          <BlogCard title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} />
+          <BlogCard title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} />
+          <BlogCard title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} />
+          <BlogCard title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} />
+          <BlogCard title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} />
+          <BlogCard title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} />
+          <BlogCard title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} />
+          <BlogCard title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} />
+          <BlogCard title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} />
         </div>
+
+      </div>
+      
+      <div className="flex w-full items-center justify-center">
+        <Navegation current_page={1} page={1} total_pages={2}/>
       </div>
     </section>
   );
