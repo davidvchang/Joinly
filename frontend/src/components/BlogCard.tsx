@@ -34,12 +34,12 @@ const BlogCard:React.FC<PropsBlogCard> = ({title, category, date, time, address,
                     <span className='text-sm'>{time}</span>
                 </div>
 
-                <div className='flex gap-2 items-center text-slate-600'>
+                <div className='flex gap-2 items-center text-slate-600 pb-5'>
                     <MapPinIcon className='w-4 h-4 '/>
                     <span className='text-sm'>{address}</span>
                 </div>
 
-                <div className='flex gap-2 items-center text-slate-600 pt-5'>
+                <div className='flex gap-2 items-center text-slate-600 pt-5 border-t border-t-slate-200'>
                     <UserGroupIcon className='w-4 h-4 '/>
                     <span className='text-sm'>{attend_number} people attending</span>
                 </div>
