@@ -15,7 +15,7 @@ const BtnNavBar:React.FC<PropsBtn> = ({link, text, isLogin}) => {
                 <span>{text}</span>
             </Link>
         ) : (
-            <Link to={link} className='w-fit h-fit px-5 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 hover:transition duration-300'>
+            <Link to={link} className='w-fit h-fit px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 hover:transition duration-300'>
                 <span>{text}</span>
             </Link>
         )}
