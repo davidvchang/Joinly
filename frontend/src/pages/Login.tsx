@@ -2,6 +2,7 @@ import { CalendarIcon } from '@heroicons/react/24/solid'
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline'
 import {Link} from 'react-router-dom'
 import React from 'react'
+import Inputs from '../components/Inputs'
 
 const Login:React.FC = () => {
   return (
@@ -19,20 +20,10 @@ const Login:React.FC = () => {
             </div>
 
             <form className='flex flex-col gap-5'>
-                <div className='flex flex-col'>
-                    <label htmlFor="email" className='text-sm font-medium'>Email Address</label>
-                    <div className='flex relative'>
-                        <input type="email" name="email" id="email" placeholder='your@email.com' className='w-full border border-slate-300 rounded-md px-10 py-2' required/>
-                        <EnvelopeIcon className='w-5 h-5 absolute text-slate-500 top-3 left-3 pointer-events-none'/>
-                    </div>
-                </div>
+                <Inputs text_label='Email Address' htmlFor_label='email' input_type='email' icon={<EnvelopeIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='your@email.com'/>
 
                 <div className='flex flex-col'>
-                    <label htmlFor="password" className='text-sm font-medium'>Password</label>
-                    <div className='flex relative'>
-                        <input type="password" name="password" id="password" placeholder='•••••••••••' className='w-full border border-slate-300 rounded-md px-10 py-2' required/>
-                        <LockClosedIcon className='w-5 h-5 absolute text-slate-500 top-3 left-3 pointer-events-none'/>
-                    </div>
+                    <Inputs text_label='Password' htmlFor_label='password' input_type='password' icon={<LockClosedIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='•••••••••••'/>
 
                     <div className='flex justify-end pt-1'>
                      <Link to='/forgot-password' className='text-sm text-blue-500 hover:underline'>Forgot password?</Link>

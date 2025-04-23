@@ -2,6 +2,7 @@ import React from 'react'
 import { CalendarIcon } from '@heroicons/react/24/solid'
 import { EnvelopeIcon, LockClosedIcon, UserIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
+import Inputs from '../components/Inputs'
 
 const Register:React.FC = () => {
   return (
@@ -20,47 +21,13 @@ const Register:React.FC = () => {
 
             <form className='flex flex-col gap-5'>
                 <div className='flex gap-2'>
-                    <div className='flex flex-col'>
-                        <label htmlFor="name" className='text-sm font-medium'>Name</label>
-                        <div className='flex relative'>
-                            <input type="text" name="name" id="name" placeholder='Mike' className='w-full border border-slate-300 rounded-md px-10 py-2' required/>
-                            <UserIcon className='w-5 h-5 absolute text-slate-500 top-3 left-3 pointer-events-none'/>
-                        </div>
-                    </div>
-
-                    <div className='flex flex-col'>
-                        <label htmlFor="last_name" className='text-sm font-medium'>Last Name</label>
-                        <div className='flex relative'>
-                            <input type="text" name="last_name" id="last_name" placeholder='Jackson' className='w-full border border-slate-300 rounded-md px-10 py-2' required/>
-                            <UserIcon className='w-5 h-5 absolute text-slate-500 top-3 left-3 pointer-events-none'/>
-                        </div>
-                    </div>
-
+                    <Inputs text_label='Name' htmlFor_label='name' input_type='text' icon={<UserIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='Enter your name'/>
+                    <Inputs text_label='Last Name' htmlFor_label='last_name' input_type='text' icon={<UserIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='Enter your last name'/>
                 </div>
 
-                <div className='flex flex-col'>
-                    <label htmlFor="email" className='text-sm font-medium'>Email Address</label>
-                    <div className='flex relative'>
-                        <input type="email" name="email" id="email" placeholder='your@email.com' className='w-full border border-slate-300 rounded-md px-10 py-2' required/>
-                        <EnvelopeIcon className='w-5 h-5 absolute text-slate-500 top-3 left-3 pointer-events-none'/>
-                    </div>
-                </div>
-
-                <div className='flex flex-col'>
-                    <label htmlFor="password" className='text-sm font-medium'>Password</label>
-                    <div className='flex relative'>
-                        <input type="password" name="password" id="password" placeholder='•••••••••••' className='w-full border border-slate-300 rounded-md px-10 py-2' required/>
-                        <LockClosedIcon className='w-5 h-5 absolute text-slate-500 top-3 left-3 pointer-events-none'/>
-                    </div>
-                </div>
-
-                <div className='flex flex-col'>
-                    <label htmlFor="confirm_password" className='text-sm font-medium'>Confirm Password</label>
-                    <div className='flex relative'>
-                        <input type="password" name="confirm_password" id="confirm_password" placeholder='•••••••••••' className='w-full border border-slate-300 rounded-md px-10 py-2' required/>
-                        <LockClosedIcon className='w-5 h-5 absolute text-slate-500 top-3 left-3'/>
-                    </div>
-                </div>
+                <Inputs text_label='Email Address' htmlFor_label='email' input_type='email' icon={<EnvelopeIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='your@email.com'/>
+                <Inputs text_label='Password' htmlFor_label='password' input_type='password' icon={<LockClosedIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='•••••••••••'/>
+                <Inputs text_label='Confirm Password' htmlFor_label='confirm_password' input_type='password' icon={<LockClosedIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='•••••••••••'/>
 
                 <div className='flex flex-col gap-2'>
                     <button type='submit' className='bg-blue-500 h-fit py-2 text-white rounded-md font-medium hover:bg-blue-600 hover:transition duration-300 cursor-pointer'>Sign In</button>
