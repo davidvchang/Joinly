@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SeachInput from "../components/SeachInput";
 import Category from "../components/Category";
 import BlogCard from "../components/BlogCard";
 import Navegation from "../components/Navegation";
+import BtnNavBar from "../components/BtnNavBar";
 
 const Home: React.FC = () => {
+  const [valueToken, setValueToken] = useState<string | null>(null)
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    setValueToken(token)
+  }, [])
   return (
     <section className="w-full flex flex-col p-10 gap-7">
       <div className="flex flex-col">
@@ -14,7 +21,14 @@ const Home: React.FC = () => {
         </span>
       </div>
 
-      <SeachInput />
+
+      <div className="flex items-center justify-between">
+        <SeachInput />
+        {valueToken && (
+          <BtnNavBar text="Create Event" link="/create-event"/>
+        )}
+      </div>
+
 
       <div className="flex flex-col gap-10">
         <div className="flex flex-col gap-3">
