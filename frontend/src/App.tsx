@@ -4,6 +4,7 @@ import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import EventPage from "./pages/EventPage"
+import Settings from "./pages/Settings"
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<Home/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>}/>
+          <Route path="/settings" element={<Settings/>}/>
           <Route path="/event/1" element={<EventPage/>}/>
         </Routes>
 
