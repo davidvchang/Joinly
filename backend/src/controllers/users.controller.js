@@ -54,7 +54,24 @@ export const deleteUser = async (req, res) => {
         }
 
         await pool.query("DELETE FROM users where id_user = $1", [id_user])
-        res.status(204).json(user.rows)
+        res.status(204).json({message: "User deleted correctly"})
+    } catch (ex) {
+        res.status(500).json({message: "An error has ocurred to delete the user", error: ex.message})
+    }
+}
+
+export const updateUser = async (req, res) => {
+    const {id_user} = req.params
+    const {image_url, name, last_name, email, password, phone_number} = req.body
+
+    try {
+        const existUser = await pool.query("SELECT COUNT(*) FROM users where id_user = $1", [id_user])
+        if(existUser.rows[0].count === 0){
+            return res.status(404).json({message: "The user doesn't exist"})
+        }
+
+        await pool.query("UPDATE user SET image_url = $1, name = $2, last_name = $3, email = $4, password = $5, phone_number = $6 where id_user = $7", [image_url, name, last_name, email, password, phone_number, id_user])
+        res.status(204).json({message: "User updated correctly"})
     } catch (ex) {
         res.status(500).json({message: "An error has ocurred to delete the user", error: ex.message})
     }
