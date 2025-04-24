@@ -7,6 +7,7 @@ import EventPage from "./pages/EventPage"
 import Settings from "./pages/Settings"
 import Profile from "./pages/Profile"
 import CreateEvent from "./pages/CreateEvent"
+import ForgotPassword from "./pages/ForgotPassword"
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/profile" element={<Profile/>}/>
           <Route path="/event/1" element={<EventPage/>}/>
           <Route path="/create-event" element={<CreateEvent/>}/>
+          <Route path="/forgot-password" element={<ForgotPassword/>}/>
         </Routes>
 
       </div>
