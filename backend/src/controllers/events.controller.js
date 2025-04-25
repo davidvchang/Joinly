@@ -26,7 +26,7 @@ export const getOneEvent = async (req, res) => {
 
     try {
         const existEvent = await pool.query("SELECT COUNT(*) FROM events where id_event = $1", [id_event])
-        if(existEvent.rows[0].count === 0){
+        if(existEvent.rows[0].count === "0"){
             return res.status(404).json({message: "The event doesn't exist"})
         }
 
@@ -42,7 +42,7 @@ export const deleteEvent = async (req, res) => {
 
     try {
         const existEvent = await pool.query("SELECT COUNT(*) FROM events where id_event = $1", [id_event])
-        if(existEvent.rows[0].count === 0){
+        if(existEvent.rows[0].count === "0"){
             return res.status(404).json({message: "The event doesn't exist"})
         }
 
@@ -59,7 +59,7 @@ export const updateUser = async (req, res) => {
 
     try {
         const existEvent = await pool.query("SELECT COUNT(*) FROM events where id_event = $1", [id_event])
-        if(existEvent.rows[0].count === 0){
+        if(existEvent.rows[0].count === "0"){
             return res.status(404).json({message: "The event doesn't exist"})
         }
 
