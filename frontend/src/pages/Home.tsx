@@ -17,11 +17,17 @@ const Home: React.FC = () => {
     setEvents(data)
   }
 
+  const getUniqueCategory = () => {
+    const categories = events.map((event) => event.category);
+    return [...new Set(categories)];
+  }
+
   useEffect(() => {
     const token = localStorage.getItem('token')
     setValueToken(token)
     getEvents()
   }, [])
+
   return (
     <section className="w-full h-full flex flex-col flex-grow p-10 gap-7">
       <div className="flex flex-col">
@@ -46,12 +52,9 @@ const Home: React.FC = () => {
 
           <div className="flex flex-wrap gap-2">
             <Category text="All" isSelected={true} />
-            <Category text="Technology" />
-            <Category text="Cultural" />
-            <Category text="Economic" />
-            <Category text="Bussiness" />
-            <Category text="Music" />
-            <Category text="Other" />
+            {getUniqueCategory().map((category, index) => {
+              return <Category key={index} text={category} />
+            })}
           </div>
         </div>
 
