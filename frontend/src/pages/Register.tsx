@@ -6,7 +6,7 @@ import Inputs from '../components/Inputs'
 import Swal from 'sweetalert2'
 
 import type {Users} from '../types/interfaces'
-import {registerUser, getAllUsers} from '../services/usersServices'
+import {registerUser} from '../services/usersServices'
 
 interface ExtendUsers extends Users{
   password: string,
@@ -57,7 +57,7 @@ const Register:React.FC<Users> = () => {
     try {
       const res = await registerUser(usersData)
       
-      if(res.response.status === 201){
+      if(res.status === 201){
         Swal.fire({
           title: 'Registered User',
           text: 'The user has been successfully registered',
