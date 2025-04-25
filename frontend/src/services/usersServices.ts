@@ -10,10 +10,10 @@ export const registerUser = async () => {
     return res.data
 }
 export const updateUser = async (id_user: number) => {
-    const res = await api.get("/users/" + id_user)
+    const res = await api.put("/users/" + id_user)
     return res.data
 }
 export const deleteUser = async (id_user: number) => {
-    const res = await api.get("/users" + id_user)
+    const res = await api.delete("/users" + id_user)
     return res.data
 }
