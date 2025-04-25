@@ -12,6 +12,7 @@ import {Events} from '../types/interfaces'
 const Home: React.FC = () => {
   const [valueToken, setValueToken] = useState<string | null>(null)
   const [events, setEvents] = useState<Events[]>([])
+  const [searchInput, setSearchInput] = useState<string>("")
 
   const getEvents = async () => {
     const data = await getAllEvents()
@@ -40,7 +41,8 @@ const Home: React.FC = () => {
 
 
       <div className="flex items-center justify-between">
-        <SeachInput />
+        <SeachInput value={searchInput} onchange={(e) => setSearchInput(e.target.value)}/>
+
         {valueToken && (
           <BtnNavBar text="Create Event" link="/create-event"/>
         )}
@@ -61,8 +63,8 @@ const Home: React.FC = () => {
 
         <div className="flex-grow grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-5">
           {events.length > 0 ? (
-
-            events.map((event) => {
+            events.filter((e) => e.title.toLowerCase().includes(searchInput.toLowerCase()))
+            .map((event) => {
                 const formattedTime = event.time.slice(0, 5);
                 const timeWithDate = `1970-01-01T${formattedTime}:00`;
                 
