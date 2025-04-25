@@ -4,6 +4,7 @@ import Category from "../components/Category";
 import BlogCard from "../components/BlogCard";
 import Navegation from "../components/Navegation";
 import BtnNavBar from "../components/BtnNavBar";
+import { format,  } from "@formkit/tempo"
 
 import {getAllEvents} from '../services/eventsServices'
 import {Events} from '../types/interfaces'
@@ -62,7 +63,10 @@ const Home: React.FC = () => {
           {events.length > 0 ? (
 
             events.map((event) => {
-                return <BlogCard key={event.id_event} link={`/event/${event.id_event}`} image_url={event.image_url} title={event.title} category={event.category} date={event.date} time={event.time} address={event.location} attend_number={10} />
+                const formattedTime = event.time.slice(0, 5);
+                const timeWithDate = `1970-01-01T${formattedTime}:00`;
+                
+                return <BlogCard key={event.id_event} link={`/event/${event.id_event}`} image_url={event.image_url} title={event.title} category={event.category} date={format(event.date, { date: "medium" })} time={format(timeWithDate, { time: "short" })} address={event.location} attend_number={10} />
             })
           ) : (
             <p className="col-span-full text-center text-lg py-10 text-gray-500 flex items-center justify-center">
