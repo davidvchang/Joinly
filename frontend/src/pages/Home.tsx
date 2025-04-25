@@ -13,6 +13,8 @@ const Home: React.FC = () => {
   const [valueToken, setValueToken] = useState<string | null>(null)
   const [events, setEvents] = useState<Events[]>([])
   const [searchInput, setSearchInput] = useState<string>("")
+  const [isSelectedCategory, setIsSelectedCategory] = useState<string | null >(null)
+  
 
   const getEvents = async () => {
     const data = await getAllEvents()
@@ -54,9 +56,9 @@ const Home: React.FC = () => {
           <span>Categories</span>
 
           <div className="flex flex-wrap gap-2">
-            <Category text="All" isSelected={true} />
+            <Category text="All" isSelected={isSelectedCategory === null} onclick={() => setIsSelectedCategory(null)}/>
             {getUniqueCategory().map((category, index) => {
-              return <Category key={index} text={category} />
+              return <Category key={index} text={category} isSelected={isSelectedCategory === category} onclick={() => setIsSelectedCategory(category)} />
             })}
           </div>
         </div>
@@ -64,6 +66,7 @@ const Home: React.FC = () => {
         <div className="flex-grow grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-5">
           {events.length > 0 ? (
             events.filter((e) => e.title.toLowerCase().includes(searchInput.toLowerCase()))
+            .filter((e) => isSelectedCategory === null || e.category === isSelectedCategory)
             .map((event) => {
                 const formattedTime = event.time.slice(0, 5);
                 const timeWithDate = `1970-01-01T${formattedTime}:00`;
