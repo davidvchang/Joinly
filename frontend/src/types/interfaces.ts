@@ -10,8 +10,10 @@ export interface Users {
 
 export interface Events {
     id_event: number,
+    image_url: string,
     title: string,
     description: string,
+    category: string,
     location: string,
     date: string,
     time: string,

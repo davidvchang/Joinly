@@ -1,8 +1,11 @@
 import { CalendarIcon } from '@heroicons/react/24/solid'
 import { ClockIcon, MapPinIcon, UserGroupIcon } from '@heroicons/react/24/outline'
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 type PropsBlogCard = {
+    link: string
+    image_url: string
     title: string,
     category: string
     date: string,
@@ -11,10 +14,11 @@ type PropsBlogCard = {
     attend_number: number
 }
 
-const BlogCard:React.FC<PropsBlogCard> = ({title, category, date, time, address, attend_number}) => {
+const BlogCard:React.FC<PropsBlogCard> = ({link, image_url, title, category, date, time, address, attend_number}) => {
   return (
-    <div className='flex flex-col w-auto rounded-xl overflow-hidden border border-slate-300 hover:-translate-y-2 hover:shadow-lg hover:transition duration-300'>
-        <div className='w-full h-48 bg-blue-300 relative'>
+    <Link to={link} className='flex flex-col w-auto rounded-xl overflow-hidden border border-slate-300 hover:-translate-y-2 hover:shadow-lg hover:transition duration-300'>
+        <div className='w-full h-48 border relative'>
+            <img src={image_url} alt="Cover" className='w-full h-full object-cover'/>
 
             <span className='text-xs bg-blue-500 text-white font-medium w-fit h-fit px-2 py-0.5 rounded-full absolute top-3 right-3 select-none'>{category}</span>
             
@@ -49,7 +53,7 @@ const BlogCard:React.FC<PropsBlogCard> = ({title, category, date, time, address,
         </div>
 
         
-    </div>
+    </Link>
   )
 }
 
