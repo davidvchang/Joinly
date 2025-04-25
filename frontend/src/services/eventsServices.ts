@@ -1,12 +1,13 @@
 import api from './api'
+import {Events} from '../types/interfaces'
 
 export const getAllEvents = async () => {
     const res = await api.get("/events")
     return res.data
 }
 
-export const registerEvent = async () => {
-    const res = await api.post("/events")
+export const registerEvent = async (data: Events) => {
+    const res = await api.post("/events", data)
     return res.data
 }
 export const updateEvent = async (id_event: number) => {

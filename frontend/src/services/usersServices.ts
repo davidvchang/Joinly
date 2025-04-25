@@ -1,12 +1,13 @@
 import api from './api'
+import {Users} from '../types/interfaces'
 
 export const getAllUsers = async () => {
     const res = await api.get("/users")
     return res.data
 }
 
-export const registerUser = async () => {
-    const res = await api.post("/users")
+export const registerUser = async (data: Users) => {
+    const res = await api.post("/users", data)
     return res.data
 }
 export const updateUser = async (id_user: number) => {
