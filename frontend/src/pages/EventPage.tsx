@@ -1,11 +1,32 @@
 import { ArrowLeftIcon, CalendarIcon, MapPinIcon, ClockIcon } from '@heroicons/react/24/outline'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Category from '../components/Category'
 import Attendees from '../components/Attendees'
+import { useParams } from 'react-router-dom';
+import { format,  } from "@formkit/tempo"
+
+import {Events} from '../types/interfaces'
+import {getOneEvent} from '../services/eventsServices'
 
 
 const EventPage:React.FC = () => {
+
+    const [event, setEvent] = useState<Events[]>([])
+
+    const {id_event} = useParams()
+
+    const getEvent = async (id_event: number) => {
+        const data = await getOneEvent(id_event)
+        setEvent(data)
+    }
+
+    useEffect(() => {
+        getEvent(Number(id_event))
+    }, [])
+    
+
+
   return (
     <section className='w-full flex flex-col p-10 gap-7'>
         <div className='flex w-full gap-10'>
@@ -14,39 +35,45 @@ const EventPage:React.FC = () => {
                     <ArrowLeftIcon className='w-5 h-5'/>
                     <span>Back to events</span>
                 </Link>
-
-                <div className='w-full h-96 bg-amber-200 rounded-md'>
-                    <img src="https://kzmkmphxt6yi20wngsby.lite.vusercontent.net/placeholder.svg?height=200&width=400&text=Tech+Conference" alt="Event Image" className='w-full h-full object-cover'/>
-                </div>
-
-                <Category text='Sports' isEventPage={true}/>
-
-                <span className='text-4xl font-bold'>Annual Charity Run</span>
-
-                <div className='flex flex-col gap-3'>
-                    <div className='flex items-center gap-40'>
-                        <div className='flex items-center gap-2'>
-                            <CalendarIcon className='w-5 h-5 text-blue-500' strokeWidth={2}/>
-                            <span>Wednesday, May 21, 2025</span>
+                {event.map((e) => {
+                    const formattedTime = e.time.slice(0, 5);
+                    const timeWithDate = `1970-01-01T${formattedTime}:00`;
+                    return <>
+                    
+                        <div className='w-full h-96 rounded-md'>
+                            <img src={e.image_url} alt="Event Image" className='w-full h-full object-cover'/>
                         </div>
 
-                        <div className='flex items-center gap-2'>
-                            <ClockIcon className='w-5 h-5 text-blue-500' strokeWidth={2}/>
-                            <span>09:30 am</span>
+                        <Category text='Sports' isEventPage={true}/>
+
+                        <span className='text-4xl font-bold'>{e.title}</span>
+
+                        <div className='flex flex-col gap-3'>
+                            <div className='flex items-center gap-40'>
+                                <div className='flex items-center gap-2'>
+                                    <CalendarIcon className='w-5 h-5 text-blue-500' strokeWidth={2}/>
+                                    <span>{format(e.date, "medium")}</span>
+                                </div>
+
+                                <div className='flex items-center gap-2'>
+                                    <ClockIcon className='w-5 h-5 text-blue-500' strokeWidth={2}/>
+                                    <span>{format(timeWithDate, { time: "short" })}</span>
+                                </div>
+
+                            </div>
+
+                            <div className='flex items-center gap-2'>
+                                <MapPinIcon className='w-5 h-5 text-blue-500' strokeWidth={2}/>
+                                <span>{e.location}</span>
+                            </div>
                         </div>
 
-                    </div>
-
-                    <div className='flex items-center gap-2'>
-                        <MapPinIcon className='w-5 h-5 text-blue-500' strokeWidth={2}/>
-                        <span>Culiacan, Sinaloa</span>
-                    </div>
-                </div>
-
-                <div className='flex flex-col gap-2'>
-                    <span className='text-xl font-semibold'>About this event</span>
-                    <p className='text-slate-600'>Run for a cause! Join our 5K charity run to raise funds for education in underprivileged communities.</p>
-                </div>
+                        <div className='flex flex-col gap-2'>
+                            <span className='text-xl font-semibold'>About this event</span>
+                            <p className='text-slate-600'>{e.description}</p>
+                        </div>
+                    </>
+                })}
             </div>
 
             <div className='flex flex-col min-w-96 h-full pt-12 gap-5'>

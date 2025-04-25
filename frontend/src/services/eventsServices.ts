@@ -15,6 +15,11 @@ export const updateEvent = async (id_event: number) => {
     return res.data
 }
 export const deleteEvent = async (id_event: number) => {
-    const res = await api.delete("/events" + id_event)
+    const res = await api.delete("/events/" + id_event)
+    return res.data
+}
+
+export const getOneEvent = async (id_event: number) => {
+    const res = await api.get("/events/" + id_event)
     return res.data
 }
