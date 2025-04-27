@@ -1,6 +1,6 @@
 import { CalendarIcon } from '@heroicons/react/24/solid'
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline'
-import {Link, useNavigate} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import React, { useState } from 'react'
 import Inputs from '../components/Inputs'
 import Swal from 'sweetalert2'
@@ -15,14 +15,13 @@ interface DataLogin {
 
 const Login:React.FC = () => {
 
-  const navigate = useNavigate()
-
   const initialValues = {
     email: "",
     password: ""
   }
 
   const [data, setData] = useState<DataLogin>(initialValues)
+  const [incorrectPassword, setIncorrectPassword] = useState<string | null>(null)
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setData({ ...data, [e.target.name]: e.target.value })
@@ -31,19 +30,25 @@ const Login:React.FC = () => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
+    try {
       const res = await loginUser(data)
-
-    if(res.status === 200) {
-      Swal.fire({
-        title: 'Login successful',
-        text: 'The user has successfully logged in successfully',
-        icon: 'success',
-        confirmButtonText: 'Ok'
-      }).then((result) => {
-        if(result.isConfirmed){
-          window.location.href = "/";
-        }
-      })
+  
+      if(res.status === 200) {
+        Swal.fire({
+          title: 'Login successful',
+          text: 'The user has successfully logged in successfully',
+          icon: 'success',
+          confirmButtonText: 'Ok'
+        }).then((result) => {
+          if(result.isConfirmed){
+            window.location.href = "/";
+          }
+        })
+      }
+      
+    } catch (ex: any) {
+      setIncorrectPassword(ex.response.data.message)
+      setTimeout(() => { setIncorrectPassword(null)}, 2800);
     }
   }
 
@@ -67,8 +72,14 @@ const Login:React.FC = () => {
                 <div className='flex flex-col'>
                     <Inputs text_label='Password' value={data.password} onchange={handleOnChange} htmlFor_label='password' input_type='password' icon={<LockClosedIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='•••••••••••'/>
 
-                    <div className='flex justify-end pt-1'>
-                     <Link to='/forgot-password' className='text-sm text-blue-500 hover:underline'>Forgot password?</Link>
+                    <div className='flex items-center justify-between w-full'>
+                      {incorrectPassword && (
+                        <span className='text-sm text-start pt-1 pl-1 text-red-600'>{incorrectPassword}</span>
+                      )}
+
+                      <div className='pt-1 ml-auto'>
+                        <Link to='/forgot-password' className='text-sm text-end text-blue-500 hover:underline'>Forgot password?</Link>
+                      </div>
                     </div>
                 </div>
 
