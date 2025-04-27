@@ -41,7 +41,7 @@ const Login:React.FC = () => {
         confirmButtonText: 'Ok'
       }).then((result) => {
         if(result.isConfirmed){
-          navigate("/")
+          window.location.href = "/";
         }
       })
     }

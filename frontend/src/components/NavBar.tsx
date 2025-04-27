@@ -2,16 +2,33 @@ import React, { useEffect, useState } from 'react'
 import { LogOut, Settings, User } from 'lucide-react';
 import { CalendarDaysIcon, ChevronDownIcon} from '@heroicons/react/24/solid'
 import BtnNavBar from './BtnNavBar'
-import { Link } from 'react-router-dom'
+import { Link} from 'react-router-dom'
+
+import {verifyIsLoggedUser, logoutUser} from '../services/usersServices'
 
 const NavBar:React.FC = () => {
-  const [valueToken, setValueToken] = useState<string | null>(null)
+  const [userIsLogged, setUserIsLogged] = useState<boolean>(false)
   const [menu, setMenu] = useState<boolean>(false)
 
+
+  const verifyUserIsLogged = async () => {
+    const data = await verifyIsLoggedUser()
+
+    if(data.message === "Authenticated") {
+      setUserIsLogged(true)
+    }else {
+      setUserIsLogged(false);
+    }
+  }
+
+  const handleLogout = async () => {
+    await logoutUser()
+    window.location.href = "/";
+  }
+
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    setValueToken(token)
-  }, [])
+    verifyUserIsLogged()
+  }, [userIsLogged])
   
   return (
     <div className='h-16 w-full bg-white border-b border-b-slate-300 flex items-center px-10 justify-between fixed top-0 z-50'>
@@ -20,7 +37,7 @@ const NavBar:React.FC = () => {
             <span className='text-2xl font-bold'>Joinly</span>
         </Link>
 
-        {valueToken ? (
+        {userIsLogged ? (
           <div className='flex items-center gap-5 relative'>
               <button className='flex items-center gap-3 cursor-pointer hover:text-blue-600 hover:transition duration-300' onClick={() => setMenu(!menu)}>
                 <div className='w-8 h-8 bg-blue-600 rounded-full'>
@@ -53,10 +70,10 @@ const NavBar:React.FC = () => {
                     </div>
 
 
-                    <Link to='/settings' className='flex gap-2 px-3 py-2 text-red-500 items-center hover:bg-red-100 hover:transition duration-300'>
+                    <button  onClick={handleLogout} className='flex gap-2 px-3 py-2 text-red-500 items-center hover:bg-red-100 hover:transition duration-300 cursor-pointer'>
                       <LogOut className='w-4.5 h-4.5'/>
                       <span className='font-medium'>Logout</span>
-                    </Link>
+                    </button>
 
                   </div>
                   
