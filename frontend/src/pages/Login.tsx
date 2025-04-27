@@ -31,28 +31,20 @@ const Login:React.FC = () => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    try {
       const res = await loginUser(data)
-      console.log('Respuesta del login:', res);
-      
-      if(res.status === 200) {
-        Swal.fire({
-          title: 'Login successful',
-          text: 'The user has successfully logged in successfully',
-          icon: 'success',
-          confirmButtonText: 'Ok'
-        }).then((result) => {
-          if(result.isConfirmed){
-            navigate("/")
-          }
-        })
-      }
-      
-    } catch (ex) {
-      console.error(ex);
-      
-    }
 
+    if(res.status === 200) {
+      Swal.fire({
+        title: 'Login successful',
+        text: 'The user has successfully logged in successfully',
+        icon: 'success',
+        confirmButtonText: 'Ok'
+      }).then((result) => {
+        if(result.isConfirmed){
+          navigate("/")
+        }
+      })
+    }
   }
 
   return (

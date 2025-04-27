@@ -28,3 +28,8 @@ export const logoutUser = async () => {
     const res = await api.post("/users/logout");
     return res.data;
 }
+
+export const verifyIsLoggedUser = async () => {
+    const res = await api.get("/users/auth/check");
+    return res.data;
+}

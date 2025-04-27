@@ -7,10 +7,11 @@ import BtnNavBar from "../components/BtnNavBar";
 import { format,  } from "@formkit/tempo"
 
 import {getAllEvents} from '../services/eventsServices'
+import {verifyIsLoggedUser} from '../services/usersServices'
 import {Events} from '../types/interfaces'
 
 const Home: React.FC = () => {
-  const [valueToken, setValueToken] = useState<string | null>(null)
+  const [userIsLogged, setUserIsLogged] = useState<boolean>(false)
   const [events, setEvents] = useState<Events[]>([])
   const [searchInput, setSearchInput] = useState<string>("")
   const [isSelectedCategory, setIsSelectedCategory] = useState<string | null >(null)
@@ -26,9 +27,18 @@ const Home: React.FC = () => {
     return [...new Set(categories)];
   }
 
+  const verifyUserIsLogged = async () => {
+    const data = await verifyIsLoggedUser()
+
+    if(data.message === "Authenticated") {
+      setUserIsLogged(true)
+    }else {
+      setUserIsLogged(false);
+    }
+  }
+
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    setValueToken(token)
+    verifyUserIsLogged()
     getEvents()
   }, [])
 
@@ -45,7 +55,7 @@ const Home: React.FC = () => {
       <div className="flex items-center justify-between">
         <SeachInput value={searchInput} onchange={(e) => setSearchInput(e.target.value)}/>
 
-        {valueToken && (
+        {userIsLogged && (
           <BtnNavBar text="Create Event" link="/create-event"/>
         )}
       </div>
