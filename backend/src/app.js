@@ -1,6 +1,8 @@
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
+
 import usersRoutes from './routes/users.route.js'
 import eventsRoutes from './routes/events.route.js'
 
@@ -13,6 +15,7 @@ app.use(cors({
     origin: '*',
     credentials: true
 }))
+app.use(cookieParser());
 app.use(express.json())
 
 app.use('/api/users', usersRoutes)

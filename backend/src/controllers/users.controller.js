@@ -1,5 +1,9 @@
 import {pool} from '../bd.js'
 import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const getUsers = async (req, res) => {
     try {
@@ -76,4 +80,47 @@ export const updateUser = async (req, res) => {
     } catch (ex) {
         res.status(500).json({message: "An error has ocurred to delete the user", error: ex.message})
     }
+}
+
+export const loginUser = async (req, res) => {
+    const {email, password} = req.body
+
+    try {
+        const existUser = await pool.query("SELECT * FROM users WHERE email = $1", [email]) 
+        if(existUser.rows[0].count === "0"){
+            return res.status(404).json({message: "The user doesn't exist"})
+        }
+
+        const user = existUser.rows[0]
+
+        const passwordIsMatch = await bcrypt.compare(password, user.password)
+        if(!passwordIsMatch) {
+            return res.status(400).json({ message: "Invalid password" });
+        }
+
+        const token = jwt.sign(
+            {
+                id: user.id, 
+                email: user.email, 
+                name: user.name, 
+                last_name: user.last_name, 
+                image_url: user.image_url, 
+                phone_number: user.phone_number
+            }, 
+    
+            process.env.JWT_SECRET,{ expiresIn: '1h' }
+        )
+    
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'lax'
+        })
+    
+        res.json({ message: 'Login successful' });
+
+    } catch (ex) {
+        res.status(500).json({message: "An error has ocurred to login", error: ex.message})
+    }
+
 }
