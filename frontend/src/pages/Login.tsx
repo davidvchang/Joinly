@@ -1,10 +1,60 @@
 import { CalendarIcon } from '@heroicons/react/24/solid'
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline'
-import {Link} from 'react-router-dom'
-import React from 'react'
+import {Link, useNavigate} from 'react-router-dom'
+import React, { useState } from 'react'
 import Inputs from '../components/Inputs'
+import Swal from 'sweetalert2'
+
+import {loginUser} from '../services/usersServices'
+
+interface DataLogin {
+  email: string,
+  password: string
+}
+
 
 const Login:React.FC = () => {
+
+  const navigate = useNavigate()
+
+  const initialValues = {
+    email: "",
+    password: ""
+  }
+
+  const [data, setData] = useState<DataLogin>(initialValues)
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setData({ ...data, [e.target.name]: e.target.value })
+  }
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    try {
+      const res = await loginUser(data)
+      console.log('Respuesta del login:', res);
+      
+      if(res.status === 200) {
+        Swal.fire({
+          title: 'Login successful',
+          text: 'The user has successfully logged in successfully',
+          icon: 'success',
+          confirmButtonText: 'Ok'
+        }).then((result) => {
+          if(result.isConfirmed){
+            navigate("/")
+          }
+        })
+      }
+      
+    } catch (ex) {
+      console.error(ex);
+      
+    }
+
+  }
+
   return (
     <section className='flex w-full' style={{height: "calc(100vh - 64px)"}}>
       <div className='w-full flex flex-col justify-center'>
@@ -19,11 +69,11 @@ const Login:React.FC = () => {
                 </div>
             </div>
 
-            <form className='flex flex-col gap-5'>
-                <Inputs text_label='Email Address' htmlFor_label='email' input_type='email' icon={<EnvelopeIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='your@email.com'/>
+            <form className='flex flex-col gap-5' onSubmit={handleLogin}>
+                <Inputs text_label='Email Address' value={data.email} onchange={handleOnChange} htmlFor_label='email' input_type='email' icon={<EnvelopeIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='your@email.com'/>
 
                 <div className='flex flex-col'>
-                    <Inputs text_label='Password' htmlFor_label='password' input_type='password' icon={<LockClosedIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='•••••••••••'/>
+                    <Inputs text_label='Password' value={data.password} onchange={handleOnChange} htmlFor_label='password' input_type='password' icon={<LockClosedIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='•••••••••••'/>
 
                     <div className='flex justify-end pt-1'>
                      <Link to='/forgot-password' className='text-sm text-blue-500 hover:underline'>Forgot password?</Link>

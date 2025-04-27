@@ -117,7 +117,7 @@ export const loginUser = async (req, res) => {
             sameSite: 'lax'
         })
     
-        res.json({ message: 'Login successful' });
+        res.status(200).json({ message: 'Login successful' });
 
     } catch (ex) {
         res.status(500).json({message: "An error has ocurred to login", error: ex.message})

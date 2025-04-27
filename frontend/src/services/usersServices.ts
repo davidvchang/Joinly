@@ -18,3 +18,13 @@ export const deleteUser = async (id_user: number) => {
     const res = await api.delete("/users" + id_user)
     return res.data
 }
+
+export const loginUser = async (data: {email: string, password: string}) => {
+    const res = await api.post("/users/auth/login", data);
+    return res;
+}
+
+export const logoutUser = async () => {
+    const res = await api.post("/users/logout");
+    return res.data;
+}
