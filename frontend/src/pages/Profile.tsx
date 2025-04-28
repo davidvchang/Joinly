@@ -1,12 +1,27 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Mail, Phone, Settings, Calendar } from 'lucide-react';
 import NavProfile from '../components/NavProfile';
 import BlogCard from '../components/BlogCard';
 import ModalEditProfile from '../components/ModalEditProfile';
+import { format } from "@formkit/tempo"
+
+import { Users } from "../types/interfaces";
+import { verifyIsLoggedUser } from "../services/usersServices";
 
 const Profile:React.FC = () => {
 
+    const [dataUser, setDataUser] = useState<Users>()
+
+    const getUser = async () => {
+        const data = await verifyIsLoggedUser()
+        setDataUser(data.user)
+    }
+
     const [toggleModal, setToggleModal] = useState<boolean>(false)
+
+    useEffect(() => {
+        getUser()
+    }, [])
 
   return (
     <section className='flex flex-col py-10 w-full items-center bg-slate-50' style={{height: "calc(100vh - 64px )"}}>
@@ -14,27 +29,33 @@ const Profile:React.FC = () => {
             <div className='w-full flex flex-col shadow p-7 rounded-lg gap-6 bg-white'>
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center gap-5'>
-                        <div className='flex items-center justify-center w-32 h-32 rounded-full bg-blue-500'>
-                            <span className='font-semibold text-4xl text-white'>DV</span>
-                        </div>
+                        {dataUser?.image_url === "" ? (
+                            <div className='flex items-center justify-center w-32 h-32 rounded-full bg-blue-500'>
+                                <span className='font-semibold text-4xl text-white select-none'>{dataUser.name[0] + dataUser.last_name[0]}</span>
+                            </div>
+                        ) : (
+                            <div className='flex items-center justify-center w-32 h-32 rounded-full bg-blue-500'>
+                                <img src={dataUser?.image_url} alt="Profile Image" className='w-full h-full object-cover'/>
+                            </div>
+                        )}
 
                         <div className='flex flex-col gap-2'>
-                            <span className='text-3xl font-semibold'>David Valenzuela</span>
+                            <span className='text-3xl font-semibold'>{dataUser?.name + dataUser?.last_name}</span>
 
                             <div className='flex flex-col gap-2 text-sm'>
                                 <div className='flex items-center gap-2 text-slate-600'>
                                     <Mail className='w-4 h-4'/>
-                                    <span>dvalenzuelachang@gmail.com</span>
+                                    <span>{dataUser?.email}</span>
                                 </div>
 
                                 <div className='flex items-center gap-2 text-slate-600'>
                                     <Phone className='w-4 h-4'/>
-                                    <span>+52 (673) 107-2858</span>
+                                    <span>{dataUser?.phone_number}</span>
                                 </div>
 
                                 <div className='flex items-center gap-2 text-slate-600'>
                                     <Calendar className='w-4 h-4'/>
-                                    <span>Joined March 2024</span>
+                                    <span>Joined {format(dataUser?.joined_time, "medium")}</span>
                                 </div>
                             </div>
                         </div>
