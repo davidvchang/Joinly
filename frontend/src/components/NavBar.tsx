@@ -5,10 +5,12 @@ import BtnNavBar from './BtnNavBar'
 import { Link} from 'react-router-dom'
 
 import {verifyIsLoggedUser, logoutUser} from '../services/usersServices'
+import {Users} from '../types/interfaces'
 
 const NavBar:React.FC = () => {
   const [userIsLogged, setUserIsLogged] = useState<boolean>(false)
   const [menu, setMenu] = useState<boolean>(false)
+  const [dataUser, setDataUsers] = useState<Users[]>([])
 
 
   const verifyUserIsLogged = async () => {
@@ -16,6 +18,7 @@ const NavBar:React.FC = () => {
 
     if(data.message === "Authenticated") {
       setUserIsLogged(true)
+      setDataUsers(data.user)
     }else {
       setUserIsLogged(false);
     }
@@ -40,11 +43,19 @@ const NavBar:React.FC = () => {
         {userIsLogged ? (
           <div className='flex items-center gap-5 relative'>
               <button className='flex items-center gap-3 cursor-pointer hover:text-blue-600 hover:transition duration-300' onClick={() => setMenu(!menu)}>
-                <div className='w-8 h-8 bg-blue-600 rounded-full'>
+                
+                  {dataUser.image_url !== "" ? (
+                    <div className='w-8 h-8 rounded-full flex items-center justify-center'>
+                        <img src={dataUser.image_url} alt="Image Profile"  className='w-full h-full object-cover'/>
+                    </div>
+                  ) : (
+                    <div className='w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center'>
+                      <span className='text-white font-medium'>{dataUser.name[0] + dataUser.last_name[0]}</span>
 
-                </div>
+                    </div>
+                  )}
 
-                <span className='font-medium'>David</span>
+                <span className='font-medium'>{dataUser?.name + " " + dataUser?.last_name}</span>
                 <ChevronDownIcon className='w-3.5 h-3.5'/>
               </button>
 
