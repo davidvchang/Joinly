@@ -1,8 +1,91 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, Tag, FileSpreadsheet, Calendar, Clock, MapPin } from 'lucide-react'
 import Inputs from '../components/Inputs'
+import Swal from 'sweetalert2'
+
+import {Events} from '../types/interfaces'
+import {registerEvent, getAllEvents} from '../services/eventsServices'
+import {verifyIsLoggedUser} from '../services/usersServices'
 
 const CreateEvent:React.FC = () => {
+
+    const valueInitial = {
+        id_event: 0,
+        image_url: "",
+        title: "",
+        description: "",
+        category: "",
+        location: "",
+        date: "",
+        time: "",
+        user_id: null,
+    }
+
+    const [dataEvents, setDataEvent] = useState<Events>(valueInitial)
+    const [events, setEvents] = useState<Events[]>([])
+    const [newCategory, setNewCategory] = useState('');
+    const [idUser, setIdUser] = useState<number | null>(null);
+
+    const getEvents = async () => {
+        const data = await getAllEvents()
+        setEvents(data)
+    }
+
+    const getDataUser = async () => {
+        const data = await verifyIsLoggedUser()
+        
+        if(data.message === "Authenticated") {
+            setIdUser(data.user.id)
+        }
+    }
+
+    const getUniqueCategory = () => {
+        const categories = events.map((e) => e.category);
+        return [...new Set(categories)];
+    }
+
+    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setDataEvent({ ...dataEvents, [e.target.name]: e.target.value })
+    }
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        await getDataUser();
+
+        const finalEvent = {
+            ...dataEvents,
+            category: dataEvents.category === 'new_category' ? newCategory : dataEvents.category
+        };
+
+        const data = await registerEvent(finalEvent)
+
+        if(data.status === 201){
+            Swal.fire({
+                title: 'Created Event',
+                text: 'The event has been successfully created',
+                icon: 'success',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if(result.isConfirmed){
+                    setDataEvent(valueInitial)
+                }
+            })
+        }
+
+    }
+
+    useEffect(() => {
+        getEvents()
+        getDataUser();
+    }, [])
+
+    useEffect(() => {
+        if (idUser !== null) {
+            setDataEvent(prev => ({ ...prev, user_id: idUser }));
+        }
+    }, [idUser]);
+
   return (
     <section className='flex flex-col py-10 w-full items-center'>
         <div className='w-[50%] flex flex-col gap-5'>
@@ -12,34 +95,44 @@ const CreateEvent:React.FC = () => {
                     <span className='text-slate-600'>Fill in the details below to create your even</span>
                 </div>
 
-                <form className='flex flex-col gap-2'>
+                <form className='flex flex-col gap-2' onSubmit={handleSubmit}>
                     <div className='flex flex-col gap-4'>
-                        <div className='w-full h-60 bg-slate-300 rounded-lg overflow-hidden'>
-                            <img src="https://kzmkmphxt6yi20wngsby.lite.vusercontent.net/placeholder.svg?height=200&width=400&text=Web+Dev+Workshop" alt="" className='w-full h-full object-cover'/>
+                        <div className='w-full h-60 bg-[#EAEAEA] rounded-lg overflow-hidden'>
+                            {dataEvents.image_url === "" ? (
+                                <img src="https://kzmkmphxt6yi20wngsby.lite.vusercontent.net/placeholder.svg?height=200&width=400&text=Web+Dev+Workshop" alt="Cover Event" className='w-full h-full object-cover'/>
+                            ) : (
+                                <img src={dataEvents.image_url} alt="" className='w-full h-full object-cover'/>
+                            )}
                         </div>
 
-                        <Inputs text_label='Image URL' htmlFor_label='image_url' input_type='text' icon={<Link className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='https://website.com/image'/>
-                        <Inputs text_label='Event Title' htmlFor_label='title' input_type='text' icon={<Tag className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='Give your event a name'/>
-                        <Inputs isTextArea={true} text_label='Description' htmlFor_label='description' icon={<FileSpreadsheet className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='Give your event a description'/>
+                        <Inputs onchange={handleOnChange} value={dataEvents.image_url} text_label='Image URL' htmlFor_label='image_url' input_type='text' icon={<Link className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='https://website.com/image'/>
+                        <Inputs onchange={handleOnChange} value={dataEvents.title} text_label='Event Title' htmlFor_label='title' input_type='text' icon={<Tag className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='Give your event a name'/>
+                        <Inputs onchange={handleOnChange} value={dataEvents.description} isTextArea={true} text_label='Description' htmlFor_label='description' icon={<FileSpreadsheet className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='Give your event a description'/>
                         
                         <div className='flex w-full items-center gap-5'>
-                            <Inputs text_label='Date' htmlFor_label='date' input_type='date' icon={<Calendar className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>}/>
-                            <Inputs text_label='Time' htmlFor_label='time' input_type='time' icon={<Clock className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>}/>
+                            <Inputs onchange={handleOnChange} value={dataEvents.date} text_label='Date' htmlFor_label='date' input_type='date' icon={<Calendar className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>}/>
+                            <Inputs onchange={handleOnChange} value={dataEvents.time} text_label='Time' htmlFor_label='time' input_type='time' icon={<Clock className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>}/>
                         </div>
 
-                        <Inputs text_label='Location' htmlFor_label='description' input_type='text' icon={<MapPin className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='Where will the event be held?'/>
+                        <Inputs onchange={handleOnChange} value={dataEvents.location} text_label='Location' htmlFor_label='location' input_type='text' icon={<MapPin className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='Where will the event be held?'/>
                     
-                        <div className="mb-4">
-                            <label htmlFor="category" className="text-sm">Category</label>
-                            <select id="category" name="category" className="rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-gray-900">
-                                <div className='flex flex-col bg-slate-200'>
-                                    <option value="">Sport</option>
-                                    <option value="">Technology</option>
-                                    <option value="">Development</option>
-                                    <option value="">Cook</option>
+                        <div className="mb-4 flex flex-col gap-4">
+                            <div className='flex flex-col gap-1'>
+                                <label htmlFor="category" className="text-sm">Category</label>
+                                <select id="category" value={dataEvents.category} onChange={handleOnChange} name="category" className="rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 text-gray-900">
+                                    {getUniqueCategory().map((category, index) => (
+                                        <option value={category} key={index}>{category}</option>
+                                    ))}
 
-                                </div>
-                            </select>
+                                    <option value="new_category">New Category</option>
+                                </select>
+
+                            </div>
+
+                            {dataEvents.category === 'new_category' && (
+                                <Inputs onchange={(e) => setNewCategory(e.target.value)} value={newCategory} text_label='New Category' htmlFor_label='new_category' input_type='text' icon={<Tag className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='Enter new category'/>
+                            )}
+
                         </div>
                     </div>
 

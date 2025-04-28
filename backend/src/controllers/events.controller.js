@@ -11,8 +11,8 @@ export const getEvents = async (req, res) => {
 }
 
 export const postEvent = async (req, res) => {
+    const id_user = req.user_id
     const {image_url, title, description, category, location, date, time, user_id} = req.body
-    console.log("Received event data:", req.body);
 
     try {
         await pool.query("INSERT INTO events (image_url, title, description, category, location, date, time, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)", [image_url, title, description, category, location, date, time, user_id])
@@ -55,7 +55,6 @@ export const deleteEvent = async (req, res) => {
 }
 
 export const updateUser = async (req, res) => {
-    const {id_event} = req.params
     const {image_url, title, description, category, location, date, time} = req.body
 
     try {

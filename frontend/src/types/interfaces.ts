@@ -17,5 +17,5 @@ export interface Events {
     location: string,
     date: string,
     time: string,
-    user_id: string,
+    user_id: number | null,
 }
