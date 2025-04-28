@@ -6,6 +6,11 @@ export const getAllUsers = async () => {
     return res.data
 }
 
+export const getOneUser = async (id_user: number) => {
+    const res = await api.get("/users/" + id_user)
+    return res.data
+}
+
 export const registerUser = async (data: Users) => {
     const res = await api.post("/users", data)
     return res

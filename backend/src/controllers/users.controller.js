@@ -41,7 +41,7 @@ export const getOneUser = async (req, res) => {
             return res.status(404).json({message: "The user doesn't exist"})
         }
 
-        const user = await pool.query("SELECT * FROM users where id_user = $1", [id_user])
+        const user = await pool.query("SELECT id_user, image_url, name, last_name, email, phone_number, joined_time FROM users where id_user = $1", [id_user])
         res.status(200).json(user.rows)
     } catch (ex) {
         res.status(500).json({message: "An error has ocurred to get the user", error: ex.message})

@@ -7,12 +7,15 @@ import { useParams } from 'react-router-dom';
 import { format,  } from "@formkit/tempo"
 
 import {Events} from '../types/interfaces'
+import {Users} from '../types/interfaces'
 import {getOneEvent} from '../services/eventsServices'
+import {getOneUser} from '../services/usersServices'
 
 
 const EventPage:React.FC = () => {
 
     const [event, setEvent] = useState<Events[]>([])
+    const [user, setUser] = useState<Users[]>([])
 
     const {id_event} = useParams()
 
@@ -21,9 +24,21 @@ const EventPage:React.FC = () => {
         setEvent(data)
     }
 
+    const getInfoCreator = async () => {
+        const data = await getOneUser(event[0]?.user_id)
+        setUser(data)
+    }
+
+
     useEffect(() => {
         getEvent(Number(id_event))
     }, [])
+
+    useEffect(() => {
+        if (event.length > 0) {
+            getInfoCreator()
+        }
+    }, [event])
     
 
 
@@ -35,16 +50,43 @@ const EventPage:React.FC = () => {
                     <ArrowLeftIcon className='w-5 h-5'/>
                     <span>Back to events</span>
                 </Link>
+
+                
                 {event.map((e) => {
                     const formattedTime = e.time.slice(0, 5);
                     const timeWithDate = `1970-01-01T${formattedTime}:00`;
+
                     return <>
                     
                         <div className='w-full h-96 rounded-md'>
                             <img src={e.image_url} alt="Event Image" className='w-full h-full object-cover'/>
                         </div>
+                        
+                        <div className='flex items-center justify-between'>
+                            <Category text={e.category} isEventPage={true}/>
 
-                        <Category text='Sports' isEventPage={true}/>
+                            <div className='flex items-center gap-5 pr-5'>
+                                <span className='text-slate-600'>Created by:</span>
+
+                                {user.map((u) => (
+                                    <div className='flex items-center gap-2'>
+                                        {u.image_url !== "" ? (
+                                            <div className='w-8 h-8 rounded-full flex items-center justify-center overflow-hidden'>
+                                                <img src={u.image_url} alt="Image Profile"  className='w-full h-full object-cover'/>
+                                            </div>
+                                        ) : (
+                                            <div className='w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center overflow-hidden'>
+                                                <span className='text-white font-medium text-sm'>{u.name[0] + u.last_name[0]}</span>
+                                            </div>
+                                        )}
+
+                                        <span className='text-slate-600'>{u.name + " " + u.last_name}</span>
+                        
+                                    </div>
+                                ))}
+                            </div>
+
+                        </div>
 
                         <span className='text-4xl font-bold'>{e.title}</span>
 
