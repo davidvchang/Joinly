@@ -10,13 +10,21 @@ interface PropsProtectedRoute {
 const ProtectedRoute:React.FC<PropsProtectedRoute> = ({children}) => {
 
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const [checkedAuth, setCheckedAuth] = useState<boolean>(false);
 
     const verifyIsAuth = async () => {
-        const data = await verifyIsLoggedUser()
-        if(data.user){
-            setIsAuthenticated(true)
-        } else {
+        try {
+            const data = await verifyIsLoggedUser()
+            if(data.user){
+                setIsAuthenticated(true)
+            } else {
+                setIsAuthenticated(false);
+            }
+            
+        } catch (ex) {
             setIsAuthenticated(false);
+        } finally {
+            setCheckedAuth(true);
         }
     }
 
@@ -24,11 +32,15 @@ const ProtectedRoute:React.FC<PropsProtectedRoute> = ({children}) => {
         verifyIsAuth()
     }, [])
 
+    if (!checkedAuth) {
+        return null;
+    }
+
     if (!isAuthenticated) {
         return <Navigate to="/login" replace />;
     }
 
-    return children
+    return <>{children}</>
 }
 
 export default ProtectedRoute
