@@ -9,9 +9,9 @@ const Settings:React.FC = () => {
             <div className='flex w-full justify-between'>
                 <span className='text-3xl font-semibold'>Account Settings</span>
 
-                <button className='w-fit h-fit px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 hover:transition duration-300'>
+                {/* <button className='w-fit h-fit px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 hover:transition duration-300'>
                     <span>Save Changes</span>
-                </button>
+                </button> */}
             </div>
 
             <div className='w-full flex flex-col shadow p-5 rounded-lg gap-6 bg-white'>

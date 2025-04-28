@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Mail, Phone, Settings, Calendar } from 'lucide-react';
-import { Link } from 'react-router-dom'
 import NavProfile from '../components/NavProfile';
 import BlogCard from '../components/BlogCard';
+import ModalEditProfile from '../components/ModalEditProfile';
 
 const Profile:React.FC = () => {
+
+    const [toggleModal, setToggleModal] = useState<boolean>(false)
+
   return (
     <section className='flex flex-col py-10 w-full items-center bg-slate-50' style={{height: "calc(100vh - 64px )"}}>
         <div className='w-[50%] flex flex-col gap-5'>
@@ -37,10 +40,10 @@ const Profile:React.FC = () => {
                         </div>
                     </div>
 
-                    <Link to='/settings' className='flex items-center px-3 py-1 h-fit w-fit gap-2 rounded-md text-slate-600 border border-slate-300 hover:bg-slate-100 hover:transition duration-300'>
+                    <button onClick={() => setToggleModal(!toggleModal)} className='flex items-center px-3 py-1 h-fit w-fit gap-2 rounded-md text-slate-600 border border-slate-300 hover:bg-slate-100 hover:transition duration-300 cursor-pointer'>
                         <Settings className='w-4 h-4'/>
                         <span>Edit Profile</span> 
-                    </Link>
+                    </button>
                 </div>
 
                 <div className='flex w-full items-center justify-around border-t border-t-slate-200 pt-7'>
@@ -72,6 +75,12 @@ const Profile:React.FC = () => {
                     {/* <BlogCard title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} /> */}
                 </div>
             </div>
+
+            {toggleModal && (
+                <div className='fixed inset-0 bg-black/20 backdrop-blur-xs flex justify-center items-center z-50'>
+                    <ModalEditProfile onclick={() => setToggleModal(!toggleModal)}/>
+                </div>
+            )}
         </div>
     </section>
   )
