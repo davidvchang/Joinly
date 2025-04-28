@@ -8,6 +8,7 @@ import Settings from "./pages/Settings"
 import Profile from "./pages/Profile"
 import CreateEvent from "./pages/CreateEvent"
 import ForgotPassword from "./pages/ForgotPassword"
+import ProtectedRoute from "./components/ProtectedRoute"
 
 function App() {
 
@@ -21,10 +22,10 @@ function App() {
           <Route path="/" element={<Home/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>}/>
-          <Route path="/settings" element={<Settings/>}/>
-          <Route path="/profile" element={<Profile/>}/>
+          <Route path="/settings" element={<ProtectedRoute> <Settings/> </ProtectedRoute>}/>
+          <Route path="/profile" element={<ProtectedRoute> <Profile/> </ProtectedRoute>}/>
           <Route path="/event/:id_event" element={<EventPage/>}/>
-          <Route path="/create-event" element={<CreateEvent/>}/>
+          <Route path="/create-event" element={<ProtectedRoute> <CreateEvent/> </ProtectedRoute>}/>
           <Route path="/forgot-password" element={<ForgotPassword/>}/>
         </Routes>
 

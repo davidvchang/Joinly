@@ -8,8 +8,8 @@ router.get('/', getUsers)
 router.post('/', postUser)
 
 router.get('/:id_user', getOneUser)
-router.delete('/:id_user', deleteUser)
-router.put('/:id_user', updateUser)
+router.delete('/:id_user', verifyToken, deleteUser)
+router.put('/:id_user', verifyToken, updateUser)
 
 router.post('/auth/login', loginUser)
 router.post('/logout', logoutUser)
