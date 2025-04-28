@@ -74,7 +74,7 @@ const Login:React.FC = () => {
 
             <form className='flex flex-col gap-5' onSubmit={handleLogin}>
               <div className='flex flex-col'>
-                <Inputs text_label='Email Address' value={data.email} onchange={handleOnChange} htmlFor_label='email' input_type='email' icon={<EnvelopeIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='your@email.com'/>
+                <Inputs text_label='Email Address' value={data.email} onchange={handleOnChange} htmlFor_label='email' input_type='email' icon={<EnvelopeIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='your@email.com' isRequired={true}/>
                 
                 {errorEmail && (
                   <span className='text-sm text-start pt-1 pl-1 text-red-600'>{errorEmail}</span>
@@ -82,7 +82,7 @@ const Login:React.FC = () => {
               </div>
 
               <div className='flex flex-col'>
-                  <Inputs text_label='Password' value={data.password} onchange={handleOnChange} htmlFor_label='password' input_type='password' icon={<LockClosedIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='•••••••••••'/>
+                  <Inputs text_label='Password' value={data.password} onchange={handleOnChange} htmlFor_label='password' input_type='password' icon={<LockClosedIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='•••••••••••' isRequired={true}/>
 
                   <div className='flex items-center justify-between w-full'>
                     {incorrectPassword && (

@@ -115,19 +115,19 @@ const Register:React.FC<Users> = () => {
 
             <form className='flex flex-col gap-5' onSubmit={handleSubmit}>
                 <div className='flex gap-2'>
-                    <Inputs text_label='Name' value={usersData.name} onchange={handleOnChange} htmlFor_label='name' input_type='text' icon={<UserIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='Enter your name'/>
-                    <Inputs text_label='Last Name' value={usersData.last_name} onchange={handleOnChange} htmlFor_label='last_name' input_type='text' icon={<UserIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='Enter your last name'/>
+                    <Inputs text_label='Name' value={usersData.name} onchange={handleOnChange} htmlFor_label='name' input_type='text' icon={<UserIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='Enter your name' isRequired={true}/>
+                    <Inputs text_label='Last Name' value={usersData.last_name} onchange={handleOnChange} htmlFor_label='last_name' input_type='text' icon={<UserIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='Enter your last name' isRequired={true}/>
                 </div>
 
                 <div className='flex flex-col'>
-                  <Inputs text_label='Email Address' value={usersData.email} onchange={handleOnChange} htmlFor_label='email' input_type='email' icon={<EnvelopeIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='your@email.com'/>
+                  <Inputs text_label='Email Address' value={usersData.email} onchange={handleOnChange} htmlFor_label='email' input_type='email' icon={<EnvelopeIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='your@email.com' isRequired={true}/>
                   {error  && (
                     <span className='text-red-600 text-sm font-medium px-1 pt-1'>{errorMessage}</span>
                   )}
                 </div>
 
                 <div className='flex flex-col'>
-                  <Inputs text_label='Password' value={usersData.password} onchange={handleOnChange} htmlFor_label='password' input_type='password' icon={<LockClosedIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='•••••••••••'/>
+                  <Inputs text_label='Password' value={usersData.password} onchange={handleOnChange} htmlFor_label='password' input_type='password' icon={<LockClosedIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='•••••••••••' isRequired={true}/>
                   
                   {messageEightCharacters === true && (
                     <span className='text-red-600 text-sm font-medium px-1 pt-1'>The password must be 8 characters long</span>
@@ -135,7 +135,7 @@ const Register:React.FC<Users> = () => {
                 </div>
                 
                 <div className='flex flex-col'>
-                  <Inputs text_label='Confirm Password' value={usersData.confirm_password} onchange={handleOnChange} htmlFor_label='confirm_password' input_type='password' icon={<LockClosedIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='•••••••••••'/>
+                  <Inputs text_label='Confirm Password' value={usersData.confirm_password} onchange={handleOnChange} htmlFor_label='confirm_password' input_type='password' icon={<LockClosedIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='•••••••••••' isRequired={true}/>
                   
                   {differentPassword && (
                     <span className='text-red-600 text-sm font-medium px-1 pt-1'>Password do not match</span>

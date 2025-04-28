@@ -8,10 +8,11 @@ type PropsInputs = {
     icon: ReactNode,
     isTextArea?: boolean
     value: string,
+    isRequired?: boolean,
     onchange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
 }
 
-const Inputs:React.FC<PropsInputs> = ({ text_label, htmlFor_label, input_type, placeholder, icon, isTextArea, value, onchange}) => {
+const Inputs:React.FC<PropsInputs> = ({ text_label, htmlFor_label, input_type, placeholder, icon, isTextArea, value, onchange, isRequired}) => {
   return (
     <>
       {isTextArea ? (
@@ -28,7 +29,7 @@ const Inputs:React.FC<PropsInputs> = ({ text_label, htmlFor_label, input_type, p
             <label htmlFor={htmlFor_label} className='text-sm'>{text_label}</label>
 
             <div className='relative w-full'>
-                <input type={input_type} value={value} onChange={onchange} name={htmlFor_label} id={htmlFor_label} className='border border-slate-300 rounded-md pl-10 pr-2 py-1.5 w-full placeholder:text-sm' placeholder={placeholder} required/>
+                <input type={input_type} value={value} onChange={onchange} name={htmlFor_label} id={htmlFor_label} className='border border-slate-300 rounded-md pl-10 pr-2 py-1.5 w-full placeholder:text-sm' placeholder={placeholder} required={isRequired}/>
                 {icon}
             </div>
         </div>

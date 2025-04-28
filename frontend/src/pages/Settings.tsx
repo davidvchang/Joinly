@@ -44,9 +44,9 @@ const Settings:React.FC = () => {
             <div className='w-full flex flex-col shadow p-5 rounded-lg gap-6 bg-white'>
                 <span className='text-xl font-medium'>Segurity</span>
 
-                <Inputs text_label='Current Password' htmlFor_label='current_password' input_type='password' icon={<Key className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>}/>
-                <Inputs text_label='New Password' htmlFor_label='new_password' input_type='password' icon={<Key className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>}/>
-                <Inputs text_label='Confirm Password' htmlFor_label='confirm_password' input_type='password' icon={<Key className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>}/>
+                <Inputs isRequired={true} text_label='Current Password' htmlFor_label='current_password' input_type='password' icon={<Key className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>}/>
+                <Inputs isRequired={true} text_label='New Password' htmlFor_label='new_password' input_type='password' icon={<Key className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>}/>
+                <Inputs isRequired={true} text_label='Confirm Password' htmlFor_label='confirm_password' input_type='password' icon={<Key className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>}/>
             </div>
 
             <div className='w-full flex flex-col shadow p-5 rounded-lg gap-4 bg-white border border-red-200'>

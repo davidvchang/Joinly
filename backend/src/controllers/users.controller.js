@@ -74,11 +74,34 @@ export const updateUser = async (req, res) => {
         if(existUser.rows[0].count === "0"){
             return res.status(404).json({message: "The user doesn't exist"})
         }
+        if(password) {
+            await pool.query("UPDATE users SET image_url = $1, name = $2, last_name = $3, email = $4, password = $5, phone_number = $6 WHERE id_user = $7", [image_url, name, last_name, email, password, phone_number, id_user])
+        } else {
+            await pool.query("UPDATE users SET image_url = $1, name = $2, last_name = $3, email = $4, phone_number = $5 WHERE id_user = $6", [image_url, name, last_name, email, phone_number, id_user])
+        }
 
-        await pool.query("UPDATE user SET image_url = $1, name = $2, last_name = $3, email = $4, password = $5, phone_number = $6 where id_user = $7", [image_url, name, last_name, email, password, phone_number, id_user])
-        res.status(204).json({message: "User updated correctly"})
+        const updatedUser = await pool.query("SELECT * FROM users WHERE id_user = $1", [id_user]);
+
+        const user = updatedUser.rows[0];
+
+        const updatedToken = jwt.sign({
+            id: user.id_user,
+            email: user.email,
+            name: user.name,
+            last_name: user.last_name,
+            image_url: user.image_url,
+            phone_number: user.phone_number,
+        }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        res.cookie('token', updatedToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'lax',
+        });
+
+        res.status(200).json({message: "User updated correctly"})
     } catch (ex) {
-        res.status(500).json({message: "An error has ocurred to delete the user", error: ex.message})
+        res.status(500).json({message: "An error has ocurred to update the user", error: ex.message})
     }
 }
 
