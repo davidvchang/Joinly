@@ -22,6 +22,7 @@ const Login:React.FC = () => {
 
   const [data, setData] = useState<DataLogin>(initialValues)
   const [incorrectPassword, setIncorrectPassword] = useState<string | null>(null)
+  const [errorEmail, setErrorEmail] = useState<string | null>(null)
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setData({ ...data, [e.target.name]: e.target.value })
@@ -47,8 +48,13 @@ const Login:React.FC = () => {
       }
       
     } catch (ex: any) {
-      setIncorrectPassword(ex.response.data.message)
-      setTimeout(() => { setIncorrectPassword(null)}, 2800);
+      if(ex.status === 404) {
+        setErrorEmail(ex.response.data.message)
+        setTimeout(() => { setErrorEmail(null)}, 2800);
+      } else{
+        setIncorrectPassword(ex.response.data.message)
+        setTimeout(() => { setIncorrectPassword(null)}, 2800);
+      }
     }
   }
 
@@ -67,30 +73,36 @@ const Login:React.FC = () => {
             </div>
 
             <form className='flex flex-col gap-5' onSubmit={handleLogin}>
+              <div className='flex flex-col'>
                 <Inputs text_label='Email Address' value={data.email} onchange={handleOnChange} htmlFor_label='email' input_type='email' icon={<EnvelopeIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='your@email.com'/>
+                
+                {errorEmail && (
+                  <span className='text-sm text-start pt-1 pl-1 text-red-600'>{errorEmail}</span>
+                )}
+              </div>
 
-                <div className='flex flex-col'>
-                    <Inputs text_label='Password' value={data.password} onchange={handleOnChange} htmlFor_label='password' input_type='password' icon={<LockClosedIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='•••••••••••'/>
+              <div className='flex flex-col'>
+                  <Inputs text_label='Password' value={data.password} onchange={handleOnChange} htmlFor_label='password' input_type='password' icon={<LockClosedIcon className='w-4 h-4 pointer-events-none absolute top-2.5 left-3 text-slate-500'/>} placeholder='•••••••••••'/>
 
-                    <div className='flex items-center justify-between w-full'>
-                      {incorrectPassword && (
-                        <span className='text-sm text-start pt-1 pl-1 text-red-600'>{incorrectPassword}</span>
-                      )}
+                  <div className='flex items-center justify-between w-full'>
+                    {incorrectPassword && (
+                      <span className='text-sm text-start pt-1 pl-1 text-red-600'>{incorrectPassword}</span>
+                    )}
 
-                      <div className='pt-1 ml-auto'>
-                        <Link to='/forgot-password' className='text-sm text-end text-blue-500 hover:underline'>Forgot password?</Link>
-                      </div>
+                    <div className='pt-1 ml-auto'>
+                      <Link to='/forgot-password' className='text-sm text-end text-blue-500 hover:underline'>Forgot password?</Link>
                     </div>
-                </div>
+                  </div>
+              </div>
 
-                <div className='flex flex-col gap-2'>
-                    <button type='submit' className='bg-blue-500 h-fit py-2 text-white rounded-md font-medium hover:bg-blue-600 hover:transition duration-300 cursor-pointer'>Sign In</button>
-                    
-                    <div className='flex text-sm gap-1 justify-center'>
-                        <span>Don't have an account?</span>
-                        <Link to='/register' className='text-blue-500 font-medium hover:underline'>Sign up</Link>
-                    </div>
-                </div>
+              <div className='flex flex-col gap-2'>
+                  <button type='submit' className='bg-blue-500 h-fit py-2 text-white rounded-md font-medium hover:bg-blue-600 hover:transition duration-300 cursor-pointer'>Sign In</button>
+                  
+                  <div className='flex text-sm gap-1 justify-center'>
+                      <span>Don't have an account?</span>
+                      <Link to='/register' className='text-blue-500 font-medium hover:underline'>Sign up</Link>
+                  </div>
+              </div>
 
             </form>
 

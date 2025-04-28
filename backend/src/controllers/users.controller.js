@@ -86,9 +86,9 @@ export const loginUser = async (req, res) => {
     const {email, password} = req.body
 
     try {
-        const existUser = await pool.query("SELECT * FROM users WHERE email = $1", [email]) 
-        if(existUser.rows[0].count === "0"){
-            return res.status(404).json({message: "The user doesn't exist"})
+        const existUser = await pool.query("SELECT * FROM users WHERE email = $1", [email])
+        if(existUser.rowCount === 0){
+            return res.status(404).json({message: "The email doesn't exist"})
         }
 
         const user = existUser.rows[0]
