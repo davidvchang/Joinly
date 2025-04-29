@@ -50,7 +50,11 @@ const Profile:React.FC = () => {
 
                                 <div className='flex items-center gap-2 text-slate-600'>
                                     <Phone className='w-4 h-4'/>
-                                    <span>{dataUser?.phone_number}</span>
+                                    {dataUser?.phone_number === "" ? (
+                                        <span>Without phone number</span>
+                                    ) : (
+                                        <span>{dataUser?.phone_number}</span>
+                                    )}
                                 </div>
 
                                 <div className='flex items-center gap-2 text-slate-600'>
