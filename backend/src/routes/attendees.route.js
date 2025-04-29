@@ -4,7 +4,7 @@ import verifyToken from '../middlewares/verifyToken.js'
 
 const router = Router()
 
-router.get('/', getAttendees)
+router.get('/:event_id', getAttendees)
 router.post('/:event_id', verifyToken, postAttendees)
 router.delete('/:event_id', verifyToken, deleteAttendees)
 router.get('/:event_id', verifyToken, getOneEventAttendee)

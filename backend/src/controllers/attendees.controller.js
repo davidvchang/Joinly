@@ -1,8 +1,9 @@
 import {pool} from '../bd.js'
 
 export const getAttendees = async (req, res) => {
+    const {event_id} = req.params
     try {
-        const attendees = await pool.query("SELECT * FROM event_attendees")
+        const attendees = await pool.query("SELECT * FROM event_attendees WHERE event_id = $1", [event_id])
         res.status(200).json(attendees.rows)
     } catch (ex) {
         res.status(500).json({message: "An error has ocurred to get all event attendees", error: ex.message})

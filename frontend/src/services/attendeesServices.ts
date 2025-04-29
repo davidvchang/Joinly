@@ -1,8 +1,8 @@
 import api from './api'
 import {Attendees} from '../types/interfaces'
 
-export const getAllAttendees = async () => {
-    const res = await api.get("/attendees")
+export const getAllAttendees = async (id_event:number) => {
+    const res = await api.get("/attendees/" + id_event)
     return res.data
 }
 

@@ -2,22 +2,31 @@ import { ArrowLeftIcon, CalendarIcon, MapPinIcon, ClockIcon } from '@heroicons/r
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Category from '../components/Category'
-import Attendees from '../components/Attendees'
 import { useParams } from 'react-router-dom';
 import { format,  } from "@formkit/tempo"
 
 import {Events} from '../types/interfaces'
 import {Users} from '../types/interfaces'
+import {Attendees} from '../types/interfaces'
 import {getOneEvent} from '../services/eventsServices'
-import {getOneUser} from '../services/usersServices'
+import {getOneUser, getAllUsers} from '../services/usersServices'
+import {getAllAttendees} from '../services/attendeesServices'
+import AttendeesComponent from '../components/Attendees';
 
 
 const EventPage:React.FC = () => {
 
     const [event, setEvent] = useState<Events[]>([])
-    const [user, setUser] = useState<Users[]>([])
+    const [attendees, setAttendees] = useState<Attendees[]>([])
+    const [userCreator, setUserCreator] = useState<Users[]>([])
+    const [users, setUsers] = useState<Users[]>([])
 
     const {id_event} = useParams()
+
+    const getAttendees = async (id_event: number) => {
+        const data = await getAllAttendees(id_event)
+        setAttendees(data)
+    }
 
     const getEvent = async (id_event: number) => {
         const data = await getOneEvent(id_event)
@@ -26,12 +35,18 @@ const EventPage:React.FC = () => {
 
     const getInfoCreator = async () => {
         const data = await getOneUser(event[0]?.user_id)
-        setUser(data)
+        setUserCreator(data)
+    }
+
+    const getUsers = async () => {
+        const data = await getAllUsers()
+        setUsers(data)
     }
 
 
     useEffect(() => {
         getEvent(Number(id_event))
+        getUsers()
     }, [])
 
     useEffect(() => {
@@ -39,6 +54,11 @@ const EventPage:React.FC = () => {
             getInfoCreator()
         }
     }, [event])
+
+    useEffect(() => {
+        getAttendees(Number(id_event))
+    }, [attendees])
+    
     
 
 
@@ -68,7 +88,7 @@ const EventPage:React.FC = () => {
                             <div className='flex items-center gap-5 pr-5'>
                                 <span className='text-slate-600'>Created by:</span>
 
-                                {user.map((u) => (
+                                {userCreator.map((u) => (
                                     <div className='flex items-center gap-2'>
                                         {u.image_url !== "" ? (
                                             <div className='w-8 h-8 rounded-full flex items-center justify-center overflow-hidden'>
@@ -130,15 +150,19 @@ const EventPage:React.FC = () => {
                         <span className='font-semibold text-xl'>Attendees</span>
 
                         <div className='w-5 h-5 p-1 flex items-center justify-center bg-blue-600 text-white rounded-full'>
-                            <span className='text-xs font-medium'>2</span>
+                            <span className='text-xs font-medium'>{attendees.length}</span>
                         </div>
                     </div>
 
                     <div className='flex flex-col gap-3 '>
-                        <Attendees name='User 1'/>
-                        <Attendees name='User 2'/>
-                        <Attendees name='User 3'/>
-                        <Attendees name='You'/>
+                    {attendees.length === 0 ? (
+                        <span className='text-center text-slate-600'>No one has registered</span>
+                    ) : (
+                        attendees.map((att) => {
+                            const userFound = users.find((u) => u.id_user === att.user_id)
+                            if (!userFound) return null;
+                            return <AttendeesComponent key={att.id_event_attendee} name={userFound?.name + " " + userFound?.last_name}/>
+                        }))}
                     </div>
                 </div>
             </div>
