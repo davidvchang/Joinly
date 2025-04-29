@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 
 import usersRoutes from './routes/users.route.js'
 import eventsRoutes from './routes/events.route.js'
+import attendeesRoutes from './routes/attendees.route.js'
 
 const app = express()
 
@@ -20,5 +21,6 @@ app.use(express.json())
 
 app.use('/api/users', usersRoutes)
 app.use('/api/events', eventsRoutes)
+app.use('/api/attendees', attendeesRoutes)
 
 export default app

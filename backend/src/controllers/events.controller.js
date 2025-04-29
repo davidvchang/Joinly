@@ -11,7 +11,6 @@ export const getEvents = async (req, res) => {
 }
 
 export const postEvent = async (req, res) => {
-    const id_user = req.user_id
     const {image_url, title, description, category, location, date, time, user_id} = req.body
 
     try {
