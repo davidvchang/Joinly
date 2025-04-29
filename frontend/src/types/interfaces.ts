@@ -19,3 +19,10 @@ export interface Events {
     time: string,
     user_id: number | null,
 }
+
+export interface Attendees {
+    id_event_attendee: number,
+    user_id: number,
+    event_id: number,
+    joined_at: string
+}
