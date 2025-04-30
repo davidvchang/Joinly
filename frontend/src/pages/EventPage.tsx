@@ -2,16 +2,24 @@ import { ArrowLeftIcon, CalendarIcon, MapPinIcon, ClockIcon } from '@heroicons/r
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Category from '../components/Category'
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { format,  } from "@formkit/tempo"
 
 import {Events} from '../types/interfaces'
 import {Users} from '../types/interfaces'
 import {Attendees} from '../types/interfaces'
+
 import {getOneEvent} from '../services/eventsServices'
 import {getOneUser, getAllUsers, verifyIsLoggedUser} from '../services/usersServices'
-import {getAllAttendees, getOneAttendee} from '../services/attendeesServices'
+import {getAllAttendees, getOneAttendee, postAttendees} from '../services/attendeesServices'
 import AttendeesComponent from '../components/Attendees';
+import Swal from 'sweetalert2';
+
+
+interface DataAttendees {
+    user_id: number,
+    event_id: number,
+}
 
 
 const EventPage:React.FC = () => {
@@ -22,8 +30,10 @@ const EventPage:React.FC = () => {
     const [users, setUsers] = useState<Users[]>([])
     const [isAttendeeUser, setIsAttendeeUser] = useState<Attendees[]>([])
     const [userIsLogged, setUserIsLogged] = useState<boolean>(false)
-
+    const [idUser, setIdUser] = useState<number | null>(null)
+    
     const {id_event} = useParams()
+    const navigate = useNavigate()
 
     const getAttendees = async (id_event: number) => {
         const data = await getAllAttendees(id_event)
@@ -42,6 +52,15 @@ const EventPage:React.FC = () => {
           setUserIsLogged(true)
         }else {
           setUserIsLogged(false);
+        }
+      }
+
+      const idUserLogged = async () => {
+        try {
+            const data = await verifyIsLoggedUser()
+            setIdUser(data.user.id)
+        } catch (err) {
+        console.error("Error in idUserLogged: ", err)
         }
       }
 
@@ -64,11 +83,45 @@ const EventPage:React.FC = () => {
         setUsers(data)
     }
 
+    const handleAttend = async () => {
+        if(userIsLogged){
+            const data = await postAttendees(Number(id_event))
+            if(data.status === 201){
+                Swal.fire({
+                    title: "User registered in the event",
+                    text: "The user has been correctly registered",
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if(result.isConfirmed){
+                        getAttendees(Number(id_event))
+                        getUserIsAttendee(Number(id_event))
+                    }
+                })
+            }
+        } else{
+            Swal.fire({
+                title: "User not logged",
+                text: "You must login fot attend to a event",
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if(result.isConfirmed){
+                    navigate('/login')
+                }
+            })
+        }
+    }
+
 
     useEffect(() => {
         getEvent(Number(id_event))
         getUsers()
         verifyUserIsLogged()
+    }, [])
+
+    useEffect(() => {
+        idUserLogged()
     }, [])
 
     useEffect(() => {
@@ -85,6 +138,7 @@ const EventPage:React.FC = () => {
     }, [event])
 
     useEffect(() => {
+        idUserLogged()
         getAttendees(Number(id_event))
     }, [id_event])
     
@@ -179,14 +233,14 @@ const EventPage:React.FC = () => {
                         <div className='flex flex-col w-full rounded-md border border-slate-300 p-5 gap-3'>
                             <span className='font-semibold text-xl'>Join this event</span>
                             <span className='text-slate-600'>Register to attend this event and connect with other participants</span>
-                            <button className='w-full h-fit py-2 bg-blue-600 hover:bg-blue-700 hover:transition duration-300 cursor-pointer rounded-md text-white font-medium'>Attend Event</button>
+                            <button onClick={handleAttend} className='w-full h-fit py-2 bg-blue-600 hover:bg-blue-700 hover:transition duration-300 cursor-pointer rounded-md text-white font-medium'>Attend Event</button>
                         </div>
                     )
                 ) : (
                     <div className='flex flex-col w-full rounded-md border border-slate-300 p-5 gap-3'>
                         <span className='font-semibold text-xl'>Join this event</span>
                         <span className='text-slate-600'>Register to attend this event and connect with other participants</span>
-                        <button className='w-full h-fit py-2 bg-blue-600 hover:bg-blue-700 hover:transition duration-300 cursor-pointer rounded-md text-white font-medium'>Attend Event</button>
+                        <button onClick={handleAttend} className='w-full h-fit py-2 bg-blue-600 hover:bg-blue-700 hover:transition duration-300 cursor-pointer rounded-md text-white font-medium'>Attend Event</button>
                     </div>
                 )}
 
