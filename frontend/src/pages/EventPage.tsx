@@ -9,8 +9,8 @@ import {Events} from '../types/interfaces'
 import {Users} from '../types/interfaces'
 import {Attendees} from '../types/interfaces'
 import {getOneEvent} from '../services/eventsServices'
-import {getOneUser, getAllUsers} from '../services/usersServices'
-import {getAllAttendees} from '../services/attendeesServices'
+import {getOneUser, getAllUsers, verifyIsLoggedUser} from '../services/usersServices'
+import {getAllAttendees, getOneAttendee} from '../services/attendeesServices'
 import AttendeesComponent from '../components/Attendees';
 
 
@@ -20,6 +20,8 @@ const EventPage:React.FC = () => {
     const [attendees, setAttendees] = useState<Attendees[]>([])
     const [userCreator, setUserCreator] = useState<Users[]>([])
     const [users, setUsers] = useState<Users[]>([])
+    const [isAttendeeUser, setIsAttendeeUser] = useState<Attendees[]>([])
+    const [userIsLogged, setUserIsLogged] = useState<boolean>(false)
 
     const {id_event} = useParams()
 
@@ -32,6 +34,25 @@ const EventPage:React.FC = () => {
         const data = await getOneEvent(id_event)
         setEvent(data)
     }
+
+     const verifyUserIsLogged = async () => {
+        const data = await verifyIsLoggedUser()
+    
+        if(data.message === "Authenticated") {
+          setUserIsLogged(true)
+        }else {
+          setUserIsLogged(false);
+        }
+      }
+
+      const getUserIsAttendee = async (id_event: number) => {
+        const data = await getOneAttendee(id_event);
+        if (data) {
+            setIsAttendeeUser([data]);
+        } else {
+            setIsAttendeeUser([]);
+        }
+    };
 
     const getInfoCreator = async () => {
         const data = await getOneUser(event[0]?.user_id)
@@ -47,7 +68,15 @@ const EventPage:React.FC = () => {
     useEffect(() => {
         getEvent(Number(id_event))
         getUsers()
+        verifyUserIsLogged()
     }, [])
+
+    useEffect(() => {
+      if(userIsLogged){
+        getUserIsAttendee(Number(id_event))
+      }
+    }, [userIsLogged])
+    
 
     useEffect(() => {
         if (event.length > 0) {
@@ -57,7 +86,7 @@ const EventPage:React.FC = () => {
 
     useEffect(() => {
         getAttendees(Number(id_event))
-    }, [attendees])
+    }, [id_event])
     
     
 
@@ -139,11 +168,27 @@ const EventPage:React.FC = () => {
             </div>
 
             <div className='flex flex-col min-w-96 h-full pt-12 gap-5'>
-                <div className='flex flex-col w-full rounded-md border border-slate-300 p-5 gap-3'>
-                    <span className='font-semibold text-xl'>Join this event</span>
-                    <span className='text-slate-600'>Register to attend this event and connect with other participants</span>
-                    <button className='w-full h-fit py-2 bg-blue-600 hover:bg-blue-700 hover:transition duration-300 cursor-pointer rounded-md text-white font-medium'>Attend Event</button>
-                </div>
+                {userIsLogged ? (
+                    isAttendeeUser.length > 0 ? (
+                        <div className='flex flex-col w-full rounded-md border border-slate-300 p-5 gap-3'>
+                            <span className='font-semibold text-xl'>Joined</span>
+                            <span className='text-slate-600'>you have joined this event</span>
+                            <button className='w-full h-fit py-2 bg-red-600 hover:bg-red-700 hover:transition duration-300 cursor-pointer rounded-md text-white font-medium'>Cancel Attend</button>
+                        </div>
+                    ) : (
+                        <div className='flex flex-col w-full rounded-md border border-slate-300 p-5 gap-3'>
+                            <span className='font-semibold text-xl'>Join this event</span>
+                            <span className='text-slate-600'>Register to attend this event and connect with other participants</span>
+                            <button className='w-full h-fit py-2 bg-blue-600 hover:bg-blue-700 hover:transition duration-300 cursor-pointer rounded-md text-white font-medium'>Attend Event</button>
+                        </div>
+                    )
+                ) : (
+                    <div className='flex flex-col w-full rounded-md border border-slate-300 p-5 gap-3'>
+                        <span className='font-semibold text-xl'>Join this event</span>
+                        <span className='text-slate-600'>Register to attend this event and connect with other participants</span>
+                        <button className='w-full h-fit py-2 bg-blue-600 hover:bg-blue-700 hover:transition duration-300 cursor-pointer rounded-md text-white font-medium'>Attend Event</button>
+                    </div>
+                )}
 
                 <div className='flex flex-col w-full rounded-md border border-slate-300 p-5 gap-3'>
                     <div className='flex items-center justify-between'>

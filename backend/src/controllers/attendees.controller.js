@@ -44,20 +44,25 @@ export const deleteAttendees = async (req, res) => {
     }
 }
 
-export const getOneEventAttendee = async (req, res) => {
+export const getMyEventAttendee = async (req, res) => {
     const user_id = req.user.id
     const {event_id} = req.params
 
     try {
-        const existUserRegistered = await pool.query("SELECT COUNT(*) FROM event_attendees WHERE user_id = $1 AND event_id = $2", [user_id, event_id])
-        if(existUserRegistered.rows[0].count === "0"){
+        if(!user_id){
+            return res.status(401).json({message: "The user isn't logged in"})
+        }
+        const attendee = await pool.query(
+            "SELECT * FROM event_attendees WHERE user_id = $1 AND event_id = $2",
+            [user_id, event_id]
+        );
+        
+        if(attendee.rows.length === 0){
             return res.status(404).json({message: "The user isn't registed in the event"})
         }
-
-        const attendee = await pool.query("SELECT * FROM event_attendees WHERE user_id = $1 AND event_id = $2", [user_id, event_id])
-        res.status(200).json(attendee.rows)
+        res.status(200).json(attendee.rows[0])
 
     } catch (ex) {
-        res.status(500).json({message: "An error has ocurred to get the user in the event", error: ex.message})
+        res.status(500).json({message: "An error has ocurred to get my user in the event", error: ex.message})
     }
 }

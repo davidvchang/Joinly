@@ -17,6 +17,6 @@ export const deleteAttendees = async (id_event: number) => {
 }
 
 export const getOneAttendee = async (id_event: number) => {
-    const res = await api.get("/attendees/" + id_event)
+    const res = await api.get("/attendees/" + id_event + "/me")
     return res.data
 }
