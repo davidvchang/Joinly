@@ -37,8 +37,8 @@ export const deleteAttendees = async (req, res) => {
             return res.status(404).json({message: "The user isn't registed in the event"})
         }
 
-        await pool.query("DELETE FROM event_attendees WHERE user_id = $1 AND event_id = $2", [user_id, event_id])
-        res.status(204).json({message: "User attendee in event deleted correctly"})
+        await pool.query("DELETE FROM event_attendees WHERE user_id = $1 AND event_id = $2 RETURNING *", [user_id, event_id])
+        res.status(201).json({message: "User attendee in event deleted correctly"})
     } catch (ex) {
         res.status(500).json({message: "An error has ocurred to delete the user in the event", error: ex.message})
     }

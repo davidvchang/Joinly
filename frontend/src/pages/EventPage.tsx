@@ -11,7 +11,7 @@ import {Attendees} from '../types/interfaces'
 
 import {getOneEvent} from '../services/eventsServices'
 import {getOneUser, getAllUsers, verifyIsLoggedUser} from '../services/usersServices'
-import {getAllAttendees, getOneAttendee, postAttendees} from '../services/attendeesServices'
+import {getAllAttendees, getOneAttendee, postAttendees, deleteAttendees} from '../services/attendeesServices'
 import AttendeesComponent from '../components/Attendees';
 import Swal from 'sweetalert2';
 
@@ -108,6 +108,22 @@ const EventPage:React.FC = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     navigate('/login')
+                }
+            })
+        }
+    }
+
+    const handleCancelAttend = async () => {
+        const data = await deleteAttendees(Number(id_event))
+        if(data.status === 201){
+            Swal.fire({
+                title: "Attend Canceled",
+                text: "The user has canceled attend",
+                icon: 'success',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if(result.isConfirmed){
+                    window.location.reload();
                 }
             })
         }
@@ -227,7 +243,7 @@ const EventPage:React.FC = () => {
                         <div className='flex flex-col w-full rounded-md border border-slate-300 p-5 gap-3'>
                             <span className='font-semibold text-xl'>Joined</span>
                             <span className='text-slate-600'>you have joined this event</span>
-                            <button className='w-full h-fit py-2 bg-red-600 hover:bg-red-700 hover:transition duration-300 cursor-pointer rounded-md text-white font-medium'>Cancel Attend</button>
+                            <button onClick={handleCancelAttend} className='w-full h-fit py-2 bg-red-600 hover:bg-red-700 hover:transition duration-300 cursor-pointer rounded-md text-white font-medium'>Cancel Attend</button>
                         </div>
                     ) : (
                         <div className='flex flex-col w-full rounded-md border border-slate-300 p-5 gap-3'>
