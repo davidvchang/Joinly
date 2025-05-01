@@ -8,19 +8,26 @@ import { format,  } from "@formkit/tempo"
 
 import {getAllEvents} from '../services/eventsServices'
 import {verifyIsLoggedUser} from '../services/usersServices'
-import {Events} from '../types/interfaces'
+import { getAttendees } from "../services/attendeesServices";
+import {Events, Attendees} from '../types/interfaces'
 
 const Home: React.FC = () => {
   const [userIsLogged, setUserIsLogged] = useState<boolean>(false)
   const [events, setEvents] = useState<Events[]>([])
   const [searchInput, setSearchInput] = useState<string>("")
   const [isSelectedCategory, setIsSelectedCategory] = useState<string | null >(null)
+  const [attend, setAttend] = useState<Attendees[]>([])
   
 
   const getEvents = async () => {
     const data = await getAllEvents()
     setEvents(data)
   }
+
+   const getAttend = async () => {
+        const data = await getAttendees()
+        setAttend(data)
+    }
 
   const getUniqueCategory = () => {
     const categories = events.map((event) => event.category);
@@ -40,6 +47,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     verifyUserIsLogged()
     getEvents()
+    getAttend()
   }, [])
 
   return (
@@ -80,8 +88,11 @@ const Home: React.FC = () => {
             .map((event) => {
                 const formattedTime = event.time.slice(0, 5);
                 const timeWithDate = `1970-01-01T${formattedTime}:00`;
+                const dataAttend = attend.filter((att) => (
+                  events.filter((e) => e.id_event === att.event_id)
+                ))
                 
-                return <BlogCard key={event.id_event} link={`/event/${event.id_event}`} image_url={event.image_url} title={event.title} category={event.category} date={format(event.date, { date: "medium" })} time={format(timeWithDate, { time: "short" })} address={event.location} attend_number={10} />
+                return <BlogCard key={event.id_event} link={`/event/${event.id_event}`} image_url={event.image_url} title={event.title} category={event.category} date={format(event.date, { date: "medium" })} time={format(timeWithDate, { time: "short" })} address={event.location} attend_number={(dataAttend.filter((att) => att.event_id === event.id_event)).length} />
             })
           ) : (
             <p className="col-span-full text-center text-lg py-10 text-gray-500 flex items-center justify-center">
