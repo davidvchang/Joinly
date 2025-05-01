@@ -13,18 +13,23 @@ type PropsBlogCard = {
     address: string,
     attend_number: number,
     isCreated?: boolean,
-    toEdit?: string
+    toEdit?: string,
+    onclickDelete?: () => void
 }
 
-const BlogCard:React.FC<PropsBlogCard> = ({link, image_url, title, category, date, time, address, attend_number, isCreated, toEdit}) => {
+const BlogCard:React.FC<PropsBlogCard> = ({link, image_url, title, category, date, time, address, attend_number, isCreated, toEdit, onclickDelete}) => {
   return (
-    <Link to={link} className='flex flex-col w-auto rounded-xl overflow-hidden border border-slate-300 hover:-translate-y-2 hover:shadow-lg hover:transition duration-300'>
-        <div className='w-full h-48 border relative'>
-            <img src={image_url} alt="Cover" className='w-full h-full object-cover'/>
+    <div  className='flex flex-col w-auto rounded-xl overflow-hidden border border-slate-300 hover:-translate-y-2 hover:shadow-lg hover:transition duration-300'>
+        <Link to={link} className='w-full h-48 border relative'>
+            {image_url === "" ? (
+                <img src="https://kzmkmphxt6yi20wngsby.lite.vusercontent.net/placeholder.svg?height=200&width=400&text=Web+Dev+Workshop" alt="Cover" className='w-full h-full object-cover'/>
+            ) : (
+                <img src={image_url} alt="Cover" className='w-full h-full object-cover'/>
+            )}
 
             <span className='text-xs bg-blue-500 text-white font-medium w-fit h-fit px-2 py-0.5 rounded-full absolute top-3 right-3 select-none'>{category}</span>
             
-        </div>
+        </Link>
 
         <div className='p-5 flex flex-col gap-2'>
             <span className='text-lg font-semibold'>{title}</span>
@@ -58,7 +63,7 @@ const BlogCard:React.FC<PropsBlogCard> = ({link, image_url, title, category, dat
                                 <span>Edit</span>
                             </Link>
 
-                            <button className='flex items-center gap-1 text-sm border px-3 py-1 rounded-md bg-red-100 text-red-500 hover:text-red-600 hover:bg-red-200 hover:transition duration-300 cursor-pointer'>
+                            <button onClick={onclickDelete} className='flex items-center gap-1 text-sm border px-3 py-1 rounded-md bg-red-100 text-red-500 hover:text-red-600 hover:bg-red-200 hover:transition duration-300 cursor-pointer'>
                                 <TrashIcon className='w-5 h-5'/>
                                 <span>Delete</span>
                             </button>
@@ -71,7 +76,7 @@ const BlogCard:React.FC<PropsBlogCard> = ({link, image_url, title, category, dat
         </div>
 
         
-    </Link>
+    </div>
   )
 }
 

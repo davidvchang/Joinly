@@ -9,7 +9,8 @@ import { Users, Events, Attendees } from "../types/interfaces";
 
 import { verifyIsLoggedUser } from "../services/usersServices";
 import { getAttendees } from "../services/attendeesServices";
-import { getCreatedEventByUser, getJoinedEventByUser, getNumberJoined, getAllEvents } from "../services/eventsServices";
+import { getCreatedEventByUser, getJoinedEventByUser, getAllEvents, deleteEvent } from "../services/eventsServices";
+import Swal from 'sweetalert2';
 
 const Profile:React.FC = () => {
 
@@ -48,6 +49,35 @@ const Profile:React.FC = () => {
 
     const handleTabClick = (tab: string) => {
         setSelectedTab(tab);
+    }
+
+    const handleDeleteEvent = async (id_event: number) => {
+        const result = await Swal.fire({
+            title: 'Do you want to delete the event?',
+            text: 'Once deleted, you will not be able to recover it.',
+            icon: 'warning',
+            confirmButtonText: 'Ok',
+            cancelButtonText: 'Cancel',
+            showCancelButton: true
+        })
+        
+        if(result.isConfirmed){
+            const data = await deleteEvent(id_event)
+
+            if(data.status === 204){
+                Swal.fire({
+                    title: 'Deleted Event',
+                    text: 'The event has been successfully deleted',
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if(result.isConfirmed){
+                        getEventsUser()
+                    }
+                })
+            }
+        }
+        
     }
 
     useEffect(() => {
@@ -149,7 +179,7 @@ const Profile:React.FC = () => {
                                         events.filter((e) => e.id_event === att.event_id)
                                     ))
                                     return eventsUser.length > 0 ? (
-                                            <BlogCard isCreated={true} toEdit={"/create-event/" + event.id_event} attend_number={(dataAttend.filter((att) => att.event_id === event.id_event)).length} key={event.id_event} link={`/event/${event.id_event}`} image_url={event.image_url} title={event.title} category={event.category} date={format(event.date, { date: "medium" })} time={format(timeWithDate, { time: "short" })} address={event.location} />
+                                            <BlogCard isCreated={true} onclickDelete={() => handleDeleteEvent(event.id_event)} toEdit={"/create-event/" + event.id_event} attend_number={(dataAttend.filter((att) => att.event_id === event.id_event)).length} key={event.id_event} link={`/event/${event.id_event}`} image_url={event.image_url} title={event.title} category={event.category} date={format(event.date, { date: "medium" })} time={format(timeWithDate, { time: "short" })} address={event.location} />
                                         
                                     ) : (
                                         <div className='w-full flex justify-center items-center pb-5'>
