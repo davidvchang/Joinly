@@ -20,3 +20,8 @@ export const getOneAttendee = async (id_event: number) => {
     const res = await api.get("/attendees/" + id_event + "/me")
     return res.data
 }
+
+export const getAttendees = async () => {
+    const res = await api.get("/attendees/")
+    return res.data
+}

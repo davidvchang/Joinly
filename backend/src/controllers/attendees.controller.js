@@ -66,3 +66,12 @@ export const getMyEventAttendee = async (req, res) => {
         res.status(500).json({message: "An error has ocurred to get my user in the event", error: ex.message})
     }
 }
+
+export const getAllAttendees = async (req, res) => {
+    try {
+        const attendees = await pool.query("SELECT * FROM event_attendees")
+        res.status(200).json(attendees.rows)
+    } catch (ex) {
+        res.status(500).json({message: "An error has ocurred to get all attendees", error: ex.message})
+    }
+}

@@ -32,3 +32,8 @@ export const getJoinedEventByUser = async () => {
     const res = await api.get("/events/user/joined")
     return res.data
 }
+
+export const getNumberJoined = async (id_event: number) => {
+    const res = await api.get("/events/number/" + id_event)
+    return res.data
+}
