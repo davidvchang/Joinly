@@ -6,22 +6,48 @@ import ModalEditProfile from '../components/ModalEditProfile';
 import { format } from "@formkit/tempo"
 
 import { Users } from "../types/interfaces";
+import { Events } from "../types/interfaces";
+
 import { verifyIsLoggedUser } from "../services/usersServices";
+import { getCreatedEventByUser } from "../services/eventsServices";
 
 const Profile:React.FC = () => {
 
     const [dataUser, setDataUser] = useState<Users>()
+    const [eventsUser, setEventsUser] = useState<Events[]>([])
+    const [selectedTab, setSelectedTab] = useState<string>('created')
 
     const getUser = async () => {
         const data = await verifyIsLoggedUser()
         setDataUser(data.user)
     }
 
+    const getEventsUser = async () => {
+        try {
+            const data = await getCreatedEventByUser()
+            console.log("Eventos recibidos:", data)
+            setEventsUser(data)
+            
+        } catch (ex) {
+            console.log("ERRORR: ", ex)
+        }
+    }
+
     const [toggleModal, setToggleModal] = useState<boolean>(false)
+
+    const handleTabClick = (tab: string) => {
+        setSelectedTab(tab);
+    }
 
     useEffect(() => {
         getUser()
     }, [])
+
+    useEffect(() => {
+        if (dataUser) {
+            getEventsUser()
+          }
+    }, [dataUser])
 
   return (
     <section className='flex flex-col py-10 w-full items-center bg-slate-50' style={{height: "calc(100vh - 64px )"}}>
@@ -89,15 +115,24 @@ const Profile:React.FC = () => {
                 </div>
             </div>
 
-            <div className='w-full flex flex-col shadow rounded-lg gap-6 bg-white'>
+            <div className='w-full flex overflow-y-auto flex-col shadow rounded-lg gap-6 bg-white'>
                 <div className='flex border-b border-b-slate-200'>
-                    <NavProfile text='Created Events' isSelected={true}/>
-                    <NavProfile text='Joined Events'/>
+                    <NavProfile text='Created Events' isSelected={selectedTab === 'created'} onclick={() => handleTabClick('created')}/>
+                    <NavProfile text='Joined Events' isSelected={selectedTab === 'joined'} onclick={() => handleTabClick('joined')}/>
                 </div>
 
                 <div className='flex flex-col gap-5 pb-5 px-5'>
-                    <span className='text-center text-slate-600'>There are not any event</span>
-                    {/* <BlogCard title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} /> */}
+                    {selectedTab === 'created' ? (
+                        dataUser &&(
+                            eventsUser.map((event) => (
+                                <BlogCard attend_number={10} key={event.id_event} link={`/event/${event.id_event}`} image_url={event.image_url} title={event.time} category={event.category} date={event.date} time={event.time} address={event.location} />
+                            ))
+
+                        )
+                    ) : (
+                        <BlogCard image_url='' title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} />
+                    )}
+                    {/* <span className='text-center text-slate-600'>There are not any event</span> */}
                 </div>
             </div>
 

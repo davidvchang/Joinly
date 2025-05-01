@@ -21,22 +21,6 @@ export const postEvent = async (req, res) => {
     }
 }
 
-export const getOneEvent = async (req, res) => {
-    const {id_event} = req.params
-
-    try {
-        const existEvent = await pool.query("SELECT COUNT(*) FROM events where id_event = $1", [id_event])
-        if(existEvent.rows[0].count === "0"){
-            return res.status(404).json({message: "The event doesn't exist"})
-        }
-
-        const event = await pool.query("SELECT * FROM events where id_event = $1", [id_event])
-        res.status(200).json(event.rows)
-    } catch (ex) {
-        res.status(500).json({message: "An error has ocurred to get the event", error: ex.message})
-    }
-}
-
 export const deleteEvent = async (req, res) => {
     const {id_event} = req.params
 
@@ -66,5 +50,36 @@ export const updateUser = async (req, res) => {
         res.status(204).json({message: "Event updated correctly"})
     } catch (ex) {
         res.status(500).json({message: "An error has ocurred to update the event", error: ex.message})
+    }
+}
+
+export const getOneEvent = async (req, res) => {
+    const {id_event} = req.params
+
+    try {
+        const existEvent = await pool.query("SELECT COUNT(*) FROM events where id_event = $1", [id_event])
+        if(existEvent.rows[0].count === "0"){
+            return res.status(404).json({message: "The event doesn't exist"})
+        }
+
+        const event = await pool.query("SELECT * FROM events where id_event = $1", [id_event])
+        res.status(200).json(event.rows)
+    } catch (ex) {
+        res.status(500).json({message: "An error has ocurred to get the event", error: ex.message})
+    }
+}
+
+
+export const getEventAttendUser = async (req, res) => {
+    const user_id = req.user.id
+
+    try {
+        const events = await pool.query("SELECT * FROM events WHERE user_id = $1", [user_id])
+        if(events.rows[0].count === "0"){
+            return res.status(404).json({message: "The user doesn't have created events"})
+        }
+        res.status(200).json(events.rows)
+    } catch (ex) {
+        res.status(500).json({message: "An error has ocurred to get all created events by the user", error: ex.message})
     }
 }
