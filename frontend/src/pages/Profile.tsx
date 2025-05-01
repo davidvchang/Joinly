@@ -25,11 +25,10 @@ const Profile:React.FC = () => {
     const getEventsUser = async () => {
         try {
             const data = await getCreatedEventByUser()
-            console.log("Eventos recibidos:", data)
             setEventsUser(data)
             
-        } catch (ex) {
-            console.log("ERRORR: ", ex)
+        } catch (ex: any) {
+            console.log("ERRORR: ", ex.response.data)
         }
     }
 
@@ -50,9 +49,9 @@ const Profile:React.FC = () => {
     }, [dataUser])
 
   return (
-    <section className='flex flex-col py-10 w-full items-center bg-slate-50' style={{height: "calc(100vh - 64px )"}}>
-        <div className='w-[50%] flex flex-col gap-5'>
-            <div className='w-full flex flex-col shadow p-7 rounded-lg gap-6 bg-white'>
+    <section className='flex flex-col py-10 px-10 w-full items-center bg-slate-50' style={{minHeight: "calc(100vh - 64px )"}}>
+        <div className='w-full flex flex-col gap-5 items-center'>
+            <div className='w-[60%] flex flex-col shadow p-7 rounded-lg gap-6 bg-white'>
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center gap-5'>
                         {dataUser?.image_url === "" ? (
@@ -66,7 +65,7 @@ const Profile:React.FC = () => {
                         )}
 
                         <div className='flex flex-col gap-2'>
-                            <span className='text-3xl font-semibold'>{dataUser?.name + dataUser?.last_name}</span>
+                            <span className='text-3xl font-semibold'>{dataUser?.name + " " + dataUser?.last_name}</span>
 
                             <div className='flex flex-col gap-2 text-sm'>
                                 <div className='flex items-center gap-2 text-slate-600'>
@@ -99,7 +98,7 @@ const Profile:React.FC = () => {
 
                 <div className='flex w-full items-center justify-around border-t border-t-slate-200 pt-7'>
                     <div className='flex flex-col justify-center items-center'>
-                        <span className='text-2xl font-bold text-blue-600'>1</span>
+                        <span className='text-2xl font-bold text-blue-600'>{eventsUser.length}</span>
                         <span className='text-sm text-slate-600'>Events Created</span>
                     </div>
 
@@ -121,13 +120,15 @@ const Profile:React.FC = () => {
                     <NavProfile text='Joined Events' isSelected={selectedTab === 'joined'} onclick={() => handleTabClick('joined')}/>
                 </div>
 
-                <div className='flex flex-col gap-5 pb-5 px-5'>
+                <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 pb-5 px-5'>
                     {selectedTab === 'created' ? (
                         dataUser &&(
-                            eventsUser.map((event) => (
-                                <BlogCard attend_number={10} key={event.id_event} link={`/event/${event.id_event}`} image_url={event.image_url} title={event.time} category={event.category} date={event.date} time={event.time} address={event.location} />
-                            ))
+                            eventsUser.map((event) => {
+                                const formattedTime = event.time.slice(0, 5);
+                                const timeWithDate = `1970-01-01T${formattedTime}:00`;
 
+                                return <BlogCard attend_number={10} key={event.id_event} link={`/event/${event.id_event}`} image_url={event.image_url} title={event.title} category={event.category} date={format(event.date, { date: "medium" })} time={format(timeWithDate, { time: "short" })} address={event.location} />
+                            })
                         )
                     ) : (
                         <BlogCard image_url='' title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} />
