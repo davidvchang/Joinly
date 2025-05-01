@@ -45,7 +45,7 @@ const NavBar:React.FC = () => {
               <button className='flex items-center gap-3 cursor-pointer hover:text-blue-600 hover:transition duration-300' onClick={() => setMenu(!menu)}>
                 
                   {dataUser.image_url !== "" ? (
-                    <div className='w-8 h-8 rounded-full flex items-center justify-center'>
+                    <div className='w-8 h-8 rounded-full flex items-center justify-center overflow-hidden'>
                         <img src={dataUser.image_url} alt="Image Profile"  className='w-full h-full object-cover'/>
                     </div>
                   ) : (

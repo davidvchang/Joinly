@@ -32,7 +32,7 @@ const CreateEvent:React.FC = () => {
 
     const getEvents = async () => {
         const data = await getAllEvents()
-        setEvents(data)
+        setEvents(data.data)
     }
 
     const getDataUser = async () => {

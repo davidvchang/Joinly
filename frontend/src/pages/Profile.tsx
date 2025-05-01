@@ -73,6 +73,7 @@ const Profile:React.FC = () => {
                 }).then((result) => {
                     if(result.isConfirmed){
                         getEventsUser()
+                        location.reload();
                     }
                 })
             }
@@ -107,7 +108,7 @@ const Profile:React.FC = () => {
                                 <span className='font-semibold text-4xl text-white select-none'>{dataUser.name[0] + dataUser.last_name[0]}</span>
                             </div>
                         ) : (
-                            <div className='flex items-center justify-center w-32 h-32 rounded-full bg-blue-500'>
+                            <div className='flex items-center justify-center w-32 h-32 rounded-full overflow-hidden'>
                                 <img src={dataUser?.image_url} alt="Profile Image" className='w-full h-full object-cover'/>
                             </div>
                         )}

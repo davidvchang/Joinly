@@ -45,6 +45,7 @@ const ModalEditProfile:React.FC<PropsModal> = ({onclick}) => {
             }).then((result) => {
                 if(result.isConfirmed){
                     getUser()
+                    location.reload();
                 }
             })
         }
@@ -68,7 +69,7 @@ const ModalEditProfile:React.FC<PropsModal> = ({onclick}) => {
                 </div> 
 
             ) : (
-                <div className='flex items-center justify-center w-40 h-40 rounded-full bg-blue-500'>
+                <div className='flex items-center justify-center w-40 h-40 rounded-full overflow-hidden'>
                     <img src={dataUser.image_url} alt="Image Profile" className='w-full h-full object-cover'/>
                 </div>
             )}
@@ -88,7 +89,7 @@ const ModalEditProfile:React.FC<PropsModal> = ({onclick}) => {
                     <span>Cancel</span>
                 </button>
 
-                <button className='w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 hover:transition duration-300 cursor-pointer'>
+                <button type='submit' className='w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 hover:transition duration-300 cursor-pointer'>
                     <span>Save</span>
                 </button>
             </div>
