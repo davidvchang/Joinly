@@ -2,9 +2,16 @@ import {pool} from '../bd.js'
 
 
 export const getEvents = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 9;
+
+    const offset = (page - 1) * limit;
+
     try {
-        const events = await pool.query("SELECT * FROM events")
-        res.status(200).json(events.rows)
+
+        const events = await pool.query("SELECT * FROM events ORDER BY id_event DESC LIMIT $1 OFFSET $2", [limit, offset])
+        const total = await pool.query("SELECT COUNT(*) FROM events");
+        res.status(200).json({total: parseInt(total.rows[0].count), page, limit, data: events.rows})
     } catch (ex) {
         res.status(500).json({message: "An error has ocurred to get all events", error: ex.message})
     }

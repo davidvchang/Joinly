@@ -33,7 +33,7 @@ const Profile:React.FC = () => {
 
     const getEvent = async () => {
         const data = await getAllEvents()
-        setEvents(data)
+        setEvents(data.data)
     }
     const getAttend = async () => {
         const data = await getAttendees()

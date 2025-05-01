@@ -1,8 +1,8 @@
 import api from './api'
 import {Events} from '../types/interfaces'
 
-export const getAllEvents = async () => {
-    const res = await api.get("/events")
+export const getAllEvents = async (page: number = 1, limit: number = 9) => {
+    const res = await api.get(`/events?page=${page}&limit=${limit}`)
     return res.data
 }
 

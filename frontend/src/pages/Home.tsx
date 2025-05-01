@@ -17,17 +17,33 @@ const Home: React.FC = () => {
   const [searchInput, setSearchInput] = useState<string>("")
   const [isSelectedCategory, setIsSelectedCategory] = useState<string | null >(null)
   const [attend, setAttend] = useState<Attendees[]>([])
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
   
 
-  const getEvents = async () => {
-    const data = await getAllEvents()
-    setEvents(data)
+  const getEvents = async (page = 1) => {
+    const data = await getAllEvents(page, 9)
+    setEvents(data.data)
+    setTotalPages(Math.ceil(data.total / data.limit));
+    setCurrentPage(data.page);
   }
 
-   const getAttend = async () => {
-        const data = await getAttendees()
-        setAttend(data)
+  const getAttend = async () => {
+      const data = await getAttendees()
+      setAttend(data)
+  }
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prev => prev + 1);
     }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prev => prev - 1);
+    }
+  };
 
   const getUniqueCategory = () => {
     const categories = events.map((event) => event.category);
@@ -46,9 +62,11 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     verifyUserIsLogged()
-    getEvents()
     getAttend()
   }, [])
+  useEffect(() => {
+    getEvents(currentPage);
+  }, [currentPage]);
 
   return (
     <section className="w-full h-full flex flex-col flex-grow p-10 gap-7">
@@ -104,7 +122,7 @@ const Home: React.FC = () => {
       </div>
       
       <div className="flex w-full items-center justify-center mt-auto">
-        <Navegation current_page={1} page={1} total_pages={2}/>
+        <Navegation current_page={currentPage} onclick_previous_page={handlePreviousPage} page={currentPage} onclick_next_page={handleNextPage} total_pages={totalPages}/>
       </div>
     </section>
   );
