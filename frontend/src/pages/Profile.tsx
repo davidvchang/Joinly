@@ -5,16 +5,16 @@ import BlogCard from '../components/BlogCard';
 import ModalEditProfile from '../components/ModalEditProfile';
 import { format } from "@formkit/tempo"
 
-import { Users } from "../types/interfaces";
-import { Events } from "../types/interfaces";
+import { Users, Events } from "../types/interfaces";
 
 import { verifyIsLoggedUser } from "../services/usersServices";
-import { getCreatedEventByUser } from "../services/eventsServices";
+import { getCreatedEventByUser, getJoinedEventByUser } from "../services/eventsServices";
 
 const Profile:React.FC = () => {
 
     const [dataUser, setDataUser] = useState<Users>()
     const [eventsUser, setEventsUser] = useState<Events[]>([])
+    const [eventsJoined, setEventsJoined] = useState<Events[]>([])
     const [selectedTab, setSelectedTab] = useState<string>('created')
 
     const getUser = async () => {
@@ -23,13 +23,13 @@ const Profile:React.FC = () => {
     }
 
     const getEventsUser = async () => {
-        try {
-            const data = await getCreatedEventByUser()
-            setEventsUser(data)
-            
-        } catch (ex: any) {
-            console.log("ERRORR: ", ex.response.data)
-        }
+        const data = await getCreatedEventByUser()
+        setEventsUser(data)
+    }
+
+    const getEventsJoined = async () => {
+        const data = await getJoinedEventByUser()
+        setEventsJoined(data)
     }
 
     const [toggleModal, setToggleModal] = useState<boolean>(false)
@@ -47,6 +47,10 @@ const Profile:React.FC = () => {
             getEventsUser()
           }
     }, [dataUser])
+
+    useEffect(() => {
+        getEventsJoined()
+    }, [])
 
   return (
     <section className='flex flex-col py-10 px-10 w-full items-center bg-slate-50' style={{minHeight: "calc(100vh - 64px )"}}>
@@ -103,12 +107,12 @@ const Profile:React.FC = () => {
                     </div>
 
                     <div className='flex flex-col justify-center items-center'>
-                        <span className='text-2xl font-bold text-purple-600'>3</span>
+                        <span className='text-2xl font-bold text-purple-600'>{eventsJoined.length}</span>
                         <span className='text-sm text-slate-600'>Events Joined</span>
                     </div>
 
                     <div className='flex flex-col justify-center items-center'>
-                        <span className='text-2xl font-bold text-green-600'>4</span>
+                        <span className='text-2xl font-bold text-green-600'>{eventsUser.length + eventsJoined.length}</span>
                         <span className='text-sm text-slate-600'>Total Events</span>
                     </div>
                 </div>
@@ -122,18 +126,31 @@ const Profile:React.FC = () => {
 
                 <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 pb-5 px-5'>
                     {selectedTab === 'created' ? (
-                        dataUser &&(
-                            eventsUser.map((event) => {
+                        dataUser && (
+                            eventsUser.map((event) =>  {
                                 const formattedTime = event.time.slice(0, 5);
                                 const timeWithDate = `1970-01-01T${formattedTime}:00`;
 
-                                return <BlogCard attend_number={10} key={event.id_event} link={`/event/${event.id_event}`} image_url={event.image_url} title={event.title} category={event.category} date={format(event.date, { date: "medium" })} time={format(timeWithDate, { time: "short" })} address={event.location} />
+                                return eventsUser.length > 0 ? (
+                                    <BlogCard attend_number={10} key={event.id_event} link={`/event/${event.id_event}`} image_url={event.image_url} title={event.title} category={event.category} date={format(event.date, { date: "medium" })} time={format(timeWithDate, { time: "short" })} address={event.location} />
+                                ) : (
+                                    <span className='text-center text-slate-600'>You have not created any events</span>
+                                )
                             })
                         )
                     ) : (
-                        <BlogCard image_url='' title="Tech Conference 2025" category="Technology" date="Saturday, June 14, 2025" time="09:00 am" address="San Francisco, Convention" attend_number={10} />
-                    )}
-                    {/* <span className='text-center text-slate-600'>There are not any event</span> */}
+                            eventsJoined.length > 0 ? (
+                                eventsJoined.map((e) => {
+                                    const formattedTime = e.time.slice(0, 5);
+                                    const timeWithDate = `1970-01-01T${formattedTime}:00`;
+                                   return <BlogCard attend_number={10} key={e.id_event} link={`/event/${e.id_event}`} image_url={e.image_url} title={e.title} category={e.category} date={format(e.date, { date: "medium" })} time={format(timeWithDate, { time: "short" })} address={e.location} />
+                                })
+
+                            ) : (
+                                <span className='text-center text-slate-600'>You have not joined any events</span>
+                            )
+                        )
+                    }
                 </div>
             </div>
 

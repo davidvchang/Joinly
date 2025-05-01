@@ -1,9 +1,10 @@
 import {Router} from 'express'
-import {getEvents, postEvent, getOneEvent, deleteEvent, updateUser, getEventAttendUser} from '../controllers/events.controller.js'
+import {getEvents, postEvent, getOneEvent, deleteEvent, updateUser, getEventAttendUser, getEventJoinedUser} from '../controllers/events.controller.js'
 import verifyToken from '../middlewares/verifyToken.js'
 
 const router = Router()
 
+router.get('/user/joined', verifyToken, getEventJoinedUser)
 router.get('/user', verifyToken, getEventAttendUser)
 
 router.get('/', getEvents)

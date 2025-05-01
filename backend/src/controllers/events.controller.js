@@ -83,3 +83,17 @@ export const getEventAttendUser = async (req, res) => {
         res.status(500).json({message: "An error has ocurred to get all created events by the user", error: ex.message})
     }
 }
+
+export const getEventJoinedUser = async (req, res) => {
+    const user_id = req.user.id
+
+    try {
+        const joined = await pool.query("SELECT e.* FROM event_attendees ea JOIN events e ON e.id_event = ea.event_id WHERE ea.user_id = $1", [user_id])
+        if(joined.rows[0].count === "0"){
+            return res.status(404).json({message: "The user has not joined any events"})
+        }
+        res.status(200).json(joined.rows)
+    } catch (ex) {
+        res.status(500).json({message: "An error has ocurred to get all created events by the user", error: ex.message})
+    }
+}
