@@ -143,7 +143,7 @@ const Register:React.FC<Users> = () => {
                 </div>
 
                 <div className='flex flex-col gap-2'>
-                    <button type='submit' className='bg-blue-500 h-fit py-2 text-white rounded-md font-medium hover:bg-blue-600 hover:transition duration-300 cursor-pointer'>Sign In</button>
+                    <button type='submit' className='bg-blue-500 h-fit py-2 text-white rounded-md font-medium hover:bg-blue-600 hover:transition duration-300 cursor-pointer'>Register</button>
                     
                     <div className='flex text-sm gap-1 justify-center'>
                         <span>Already have an account?</span>
