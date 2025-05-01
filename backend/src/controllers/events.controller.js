@@ -37,11 +37,12 @@ export const deleteEvent = async (req, res) => {
     }
 }
 
-export const updateUser = async (req, res) => {
+export const updateEvent = async (req, res) => {
+    const {id_event} = req.params
     const {image_url, title, description, category, location, date, time} = req.body
 
     try {
-        const existEvent = await pool.query("SELECT COUNT(*) FROM events where id_event = $1", [id_event])
+        const existEvent = await pool.query("SELECT COUNT(*) FROM events WHERE id_event = $1", [id_event])
         if(existEvent.rows[0].count === "0"){
             return res.status(404).json({message: "The event doesn't exist"})
         }

@@ -10,9 +10,9 @@ export const registerEvent = async (data: Events) => {
     const res = await api.post("/events", data)
     return res
 }
-export const updateEvent = async (id_event: number) => {
-    const res = await api.put("/events/" + id_event)
-    return res.data
+export const updateEvent = async (id_event: number, data:Events) => {
+    const res = await api.put("/events/" + id_event, data)
+    return res
 }
 export const deleteEvent = async (id_event: number) => {
     const res = await api.delete("/events/" + id_event)

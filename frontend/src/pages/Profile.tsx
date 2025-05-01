@@ -149,7 +149,7 @@ const Profile:React.FC = () => {
                                         events.filter((e) => e.id_event === att.event_id)
                                     ))
                                     return eventsUser.length > 0 ? (
-                                            <BlogCard attend_number={(dataAttend.filter((att) => att.event_id === event.id_event)).length} key={event.id_event} link={`/event/${event.id_event}`} image_url={event.image_url} title={event.title} category={event.category} date={format(event.date, { date: "medium" })} time={format(timeWithDate, { time: "short" })} address={event.location} />
+                                            <BlogCard isCreated={true} toEdit={"/create-event/" + event.id_event} attend_number={(dataAttend.filter((att) => att.event_id === event.id_event)).length} key={event.id_event} link={`/event/${event.id_event}`} image_url={event.image_url} title={event.title} category={event.category} date={format(event.date, { date: "medium" })} time={format(timeWithDate, { time: "short" })} address={event.location} />
                                         
                                     ) : (
                                         <div className='w-full flex justify-center items-center pb-5'>

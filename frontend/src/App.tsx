@@ -25,7 +25,8 @@ function App() {
           <Route path="/settings" element={<ProtectedRoute> <Settings/> </ProtectedRoute>}/>
           <Route path="/profile" element={<ProtectedRoute> <Profile/> </ProtectedRoute>}/>
           <Route path="/event/:id_event" element={<EventPage/>}/>
-          <Route path="/create-event" element={<ProtectedRoute> <CreateEvent/> </ProtectedRoute>}/>
+          <Route path="/create-event/" element={<ProtectedRoute> <CreateEvent/> </ProtectedRoute>}/>
+          <Route path="/create-event/:id_event" element={<ProtectedRoute> <CreateEvent/> </ProtectedRoute>}/>
           <Route path="/forgot-password" element={<ForgotPassword/>}/>
         </Routes>
 

@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { Link, Tag, FileSpreadsheet, Calendar, Clock, MapPin } from 'lucide-react'
 import Inputs from '../components/Inputs'
+import { useParams, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
 
 import {Events} from '../types/interfaces'
-import {registerEvent, getAllEvents} from '../services/eventsServices'
+import {registerEvent, getAllEvents, updateEvent, getOneEvent} from '../services/eventsServices'
 import {verifyIsLoggedUser} from '../services/usersServices'
 
 const CreateEvent:React.FC = () => {
+
+    const { id_event } = useParams();
+    const navigate = useNavigate()
 
     const valueInitial = {
         id_event: 0,
@@ -51,30 +55,60 @@ const CreateEvent:React.FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        await getDataUser();
+        if(id_event){
+            const finalEvent = {
+                ...dataEvents,
+                category: dataEvents.category === 'new_category' ? newCategory : dataEvents.category
+            };
 
-        const finalEvent = {
-            ...dataEvents,
-            category: dataEvents.category === 'new_category' ? newCategory : dataEvents.category
-        };
+            const data = await updateEvent(Number(id_event), finalEvent)
+            if(data.status === 204){
+                Swal.fire({
+                    title: 'Updated Event',
+                    text: 'The event has been successfully updated',
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if(result.isConfirmed){
+                        navigate('/profile')
+                    }
+                })
+            }
 
-        const data = await registerEvent(finalEvent)
-
-        if(data.status === 201){
-            Swal.fire({
-                title: 'Created Event',
-                text: 'The event has been successfully created',
-                icon: 'success',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if(result.isConfirmed){
-                    setDataEvent(valueInitial)
-                }
-            })
+        } else {
+            await getDataUser();
+    
+            const finalEvent = {
+                ...dataEvents,
+                category: dataEvents.category === 'new_category' ? newCategory : dataEvents.category
+            };
+    
+            const data = await registerEvent(finalEvent)
+    
+            if(data.status === 201){
+                Swal.fire({
+                    title: 'Created Event',
+                    text: 'The event has been successfully created',
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if(result.isConfirmed){
+                        setDataEvent(valueInitial)
+                    }
+                })
+            }
         }
-
     }
 
+    const getValuesEvent = async () => {
+        const data = await getOneEvent(Number(id_event))
+        if (Array.isArray(data) && data.length > 0) {
+            const event = data[0];
+
+            const formattedDate = event.date ? new Date(event.date).toISOString().split('T')[0] : "";
+            setDataEvent({...event, date: formattedDate, });
+        }
+    }
     useEffect(() => {
         getEvents()
         getDataUser();
@@ -86,14 +120,27 @@ const CreateEvent:React.FC = () => {
         }
     }, [idUser]);
 
+    useEffect(() => {
+        if (id_event) {
+          getValuesEvent();
+        }
+      }, [id_event]);
+
   return (
     <section className='flex flex-col py-10 w-full items-center'>
         <div className='w-[50%] flex flex-col gap-5'>
             <div className='w-full flex flex-col p-7 gap-6'>
-                <div className='flex flex-col items-center'>
-                    <span className='text-3xl font-semibold'>Create a New Event</span>
-                    <span className='text-slate-600'>Fill in the details below to create your even</span>
-                </div>
+                {id_event ? (
+                    <div className='flex flex-col items-center'>
+                        <span className='text-3xl font-semibold'>Edit Event</span>
+                        <span className='text-slate-600'>edit the details below</span>
+                    </div>
+                ) : (
+                    <div className='flex flex-col items-center'>
+                        <span className='text-3xl font-semibold'>Create a New Event</span>
+                        <span className='text-slate-600'>Fill in the details below to create your even</span>
+                    </div>
+                )}
 
                 <form className='flex flex-col gap-2' onSubmit={handleSubmit}>
                     <div className='flex flex-col gap-4'>
@@ -137,8 +184,11 @@ const CreateEvent:React.FC = () => {
                     </div>
 
                     <div className='flex items-center justify-end pt-3'>
-                        <button type="submit" className='w-fit h-fit px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 hover:transition duration-300 cursor-pointer'>Create Event</button>
-
+                        {id_event ? (
+                            <button type="submit" className='w-fit h-fit px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 hover:transition duration-300 cursor-pointer'>Edit Event</button>
+                        ) : (
+                            <button type="submit" className='w-fit h-fit px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 hover:transition duration-300 cursor-pointer'>Create Event</button>
+                        )}
                     </div>
                     
                 </form>
