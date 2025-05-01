@@ -124,34 +124,44 @@ const Profile:React.FC = () => {
                     <NavProfile text='Joined Events' isSelected={selectedTab === 'joined'} onclick={() => handleTabClick('joined')}/>
                 </div>
 
-                <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 pb-5 px-5'>
+                
                     {selectedTab === 'created' ? (
                         dataUser && (
-                            eventsUser.map((event) =>  {
-                                const formattedTime = event.time.slice(0, 5);
-                                const timeWithDate = `1970-01-01T${formattedTime}:00`;
+                            <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 pb-5 px-5'>
+                                {eventsUser.map((event) => {
+                                    const formattedTime = event.time.slice(0, 5);
+                                    const timeWithDate = `1970-01-01T${formattedTime}:00`;
 
-                                return eventsUser.length > 0 ? (
-                                    <BlogCard attend_number={10} key={event.id_event} link={`/event/${event.id_event}`} image_url={event.image_url} title={event.title} category={event.category} date={format(event.date, { date: "medium" })} time={format(timeWithDate, { time: "short" })} address={event.location} />
-                                ) : (
-                                    <span className='text-center text-slate-600'>You have not created any events</span>
-                                )
-                            })
+                                    return eventsUser.length > 0 ? (
+                                            <BlogCard attend_number={10} key={event.id_event} link={`/event/${event.id_event}`} image_url={event.image_url} title={event.title} category={event.category} date={format(event.date, { date: "medium" })} time={format(timeWithDate, { time: "short" })} address={event.location} />
+                                        
+                                    ) : (
+                                        <div className='w-full flex justify-center items-center pb-5'>
+                                            <span className='text-center text-slate-600 '>You have not created any events</span>
+                                        </div>
+                                    )
+                                })}
+                            </div>
                         )
                     ) : (
                             eventsJoined.length > 0 ? (
-                                eventsJoined.map((e) => {
-                                    const formattedTime = e.time.slice(0, 5);
-                                    const timeWithDate = `1970-01-01T${formattedTime}:00`;
-                                   return <BlogCard attend_number={10} key={e.id_event} link={`/event/${e.id_event}`} image_url={e.image_url} title={e.title} category={e.category} date={format(e.date, { date: "medium" })} time={format(timeWithDate, { time: "short" })} address={e.location} />
-                                })
+                                <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 pb-5 px-5'>
+                                    {eventsJoined.map((e) => {
+                                        const formattedTime = e.time.slice(0, 5);
+                                        const timeWithDate = `1970-01-01T${formattedTime}:00`;
+
+                                        return <BlogCard attend_number={10} key={e.id_event} link={`/event/${e.id_event}`} image_url={e.image_url} title={e.title} category={e.category} date={format(e.date, { date: "medium" })} time={format(timeWithDate, { time: "short" })} address={e.location} />
+                                    })}
+                                </div>
 
                             ) : (
-                                <span className='text-center text-slate-600'>You have not joined any events</span>
+                                <div className='w-full flex justify-center items-center pb-5'>
+                                    <span className='text-center text-slate-600'>You have not joined any events</span>
+                                </div>
                             )
                         )
                     }
-                </div>
+                
             </div>
 
             {toggleModal && (
